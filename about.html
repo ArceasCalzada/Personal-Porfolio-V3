@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Me - Arceas John Calzada</title>
+    <meta name="description" content="Learn more about Arceas John Calzada's journey in UI/UX Design and Development.">
+    <!-- Google Fonts: Montserrat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Spline+Sans+Mono:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Firebase SDKs (Compat version) -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js" defer></script>
+    <script src="js/main.js" defer></script>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+</head>
+<body>
+    <div class="noise-overlay"></div>
+
+    <nav class="navbar">
+        <div class="nav-brand">Arceas John Calzada</div>
+        <div class="nav-links">
+            <div class="nav-indicator"></div>
+            <a href="index.html#hero">Home</a>
+            <a href="index.html#about">About</a>
+            <a href="index.html#showcase">Showcase</a>
+            <a href="index.html#contact">Contact</a>
+        </div>
+        <div class="nav-actions">
+            <a href="CV_ArceasJohnCalzada.pdf" target="_blank" class="nav-cv-btn dynCVLink" style="padding: 0.4rem 1.2rem; border-radius: 20px; font-weight: 600; font-size: 0.9rem; text-decoration: none; color: var(--color-bg); background: var(--color-text-light); transition: all 0.3s ease; margin-right: 0.5rem; display: inline-flex; align-items: center; gap: 0.3rem; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">CV <span style="font-size: 1.1rem; line-height: 1;">↗</span></a>
+            <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle Theme">
+                <span class="icon-sun">☀️</span>
+                <span class="icon-moon">🌙</span>
+            </button>
+        </div>
+    </nav>
+
+    <main class="content-wrapper" style="padding-top: 150px; min-height: 80vh;">
+        <section id="about-extended" class="about fade-in" data-bg-dark="#1a1412" data-bg-light="#fff5f0">
+            <div class="about-content" style="max-width: 1600px; margin: 0 auto; padding: 0 8%;">
+                <div class="editorial-layout-row" style="padding-top: 2rem;">
+                    <!-- Left Column: "About" label -->
+                    <div class="editorial-layout-left">
+                        <h2>About</h2>
+                    </div>
+                    
+                    <!-- Right Column: Text & Info & Image -->
+                    <div class="editorial-layout-right">
+                        <!-- Headline -->
+                        <h1 class="editorial-text-intro" id="dynAboutPageHeadline" style="margin-top: 0; margin-bottom: 1.5rem; font-size: clamp(2rem, 4vw, 3rem); font-weight: 400; line-height: 1.2;"></h1>
+                        <p class="editorial-text-subtitle" id="dynAboutPageSubtitle" style="font-size: 1.1rem; color: var(--color-text-muted); margin-bottom: 2.5rem; line-height: 1.6;"></p>
+                        
+                        <!-- Bio text -->
+                        <div class="editorial-text-body" id="dynAboutPageBio" style="margin-bottom: 3.5rem; font-size: 1.15rem; line-height: 1.8; color: var(--color-text);">
+                        </div>
+                        
+                        <!-- Currently / Available -->
+                        <div style="margin-bottom: 3rem; display: flex; flex-direction: column; gap: 0.8rem; color: var(--color-text-muted); font-size: 0.95rem;">
+                            <div style="display: flex; align-items: baseline;"><strong style="width: 100px; color: var(--color-text-muted); font-weight: 500;">Currently</strong> <span id="dynAboutPageCurrently" style="color: var(--color-text);"></span></div>
+                            <div style="display: flex; align-items: baseline;"><strong style="width: 100px; color: var(--color-text-muted); font-weight: 500;">Available</strong> <span id="dynAboutPageAvailable" style="color: var(--color-text);"></span></div>
+                        </div>
+
+                        <!-- Links -->
+                        <div style="display: flex; gap: 2.5rem; flex-wrap: wrap; margin-bottom: 4rem;">
+                            <a href="Resume_Arceas_John_Calzada.pdf" target="_blank" style="text-decoration: none; color: var(--color-text); font-weight: 500; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 0.3rem;">CV <span style="font-size: 1rem; color: var(--color-text-muted);">↗</span></a>
+                            <a href="https://www.linkedin.com/in/arceas-calzada/" target="_blank" style="text-decoration: none; color: var(--color-text); font-weight: 500; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 0.3rem;">LinkedIn <span style="font-size: 1rem; color: var(--color-text-muted);">↗</span></a>
+                            <a href="mailto:calzada.arceas@gmail.com" style="text-decoration: none; color: var(--color-text); font-weight: 500; font-size: 0.95rem;">calzada.arceas@gmail.com</a>
+                        </div>
+                        
+                        <!-- Big Photo -->
+                        <div style="position: relative; width: 100%; border-radius: 16px; overflow: hidden; margin-bottom: 3rem;">
+                            <div class="stacked-carousel" id="aboutProfileCarousel" style="position: relative; z-index: 2; width: 100%; aspect-ratio: 3/4; max-width: 500px; margin: 0 auto;">
+                                <!-- Dynamic photos go here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Spotify Widget -->
+                        <div style="width: 100%; max-width: 420px; background: rgba(255,255,255,0.02); padding: 1.5rem; border-radius: 24px; border: 1px solid var(--glass-border); backdrop-filter: blur(10px);">
+                            <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1rem;">
+                                <span style="width: 8px; height: 8px; background-color: #1DB954; border-radius: 50%; display: inline-block; box-shadow: 0 0 10px rgba(29, 185, 84, 0.6);"></span>
+                                <h3 style="font-size: 0.9rem; margin: 0; color: var(--color-text); font-weight: 500;">Currently listening to</h3>
+                            </div>
+                            <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/60a0Rd6pjrkxjPbaKzXjfq?utm_source=generator&theme=0" width="100%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Divider -->
+                <!-- Divider -->
+                <div style="height: 1px; background: var(--glass-border); width: 100%; margin: 5rem 0;"></div>
+
+                <!-- Experience Section -->
+                <div class="editorial-layout-row">
+                    <div class="editorial-layout-left">
+                        <h2>Experience</h2>
+                    </div>
+                    <div class="editorial-layout-right">
+                        <div class="editorial-exp-list" id="dynAboutPageExperience">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Divider -->
+                <div style="height: 1px; background: var(--glass-border); width: 100%; margin: 5rem 0;"></div>
+
+                <!-- Education Section -->
+                <div class="editorial-layout-row">
+                    <div class="editorial-layout-left">
+                        <h2>Education</h2>
+                    </div>
+                    <div class="editorial-layout-right">
+                        <div id="dynAboutPageEducation" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 3rem; align-items: start;">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Divider -->
+                <div style="height: 1px; background: var(--glass-border); width: 100%; margin: 5rem 0;"></div>
+                <div class="editorial-layout-row">
+                    <div class="editorial-layout-left">
+                        <h2>Licenses & certifications</h2>
+                    </div>
+                    <div class="editorial-layout-right">
+                        <div class="editorial-exp-list" id="dynAboutPageCertificates">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Divider -->
+                <div style="height: 1px; background: var(--glass-border); width: 100%; margin: 5rem 0;"></div>
+                
+                <div class="editorial-layout-row">
+                    <div class="editorial-layout-left">
+                        <h2>Skills</h2>
+                    </div>
+                    <div class="editorial-layout-right">
+                        <div style="display: flex; flex-direction: column; gap: 2.5rem;">
+                            <!-- Competencies -->
+                            <div>
+                                <h3 style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-muted); margin: 0 0 1rem 0; font-weight: 500;">Competencies</h3>
+                                <div id="dynAboutPageSkillsDesign" style="display: flex; flex-wrap: wrap; gap: 0.8rem;">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+                            <!-- Tools -->
+                            <div>
+                                <h3 style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-muted); margin: 0 0 1rem 0; font-weight: 500;">Tools</h3>
+                                <div id="dynAboutPageSkillsDev" style="display: flex; flex-wrap: wrap; gap: 0.8rem;">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 6rem; text-align: center;">
+                    <a href="index.html" class="btn btn-primary" style="padding: 1rem 2rem; font-size: 1.1rem;">← Back to Portfolio</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+        <footer id="contact" class="premium-mesh-footer fade-in" data-bg-dark="#151116" data-bg-light="#faf5fa">
+        <div class="mesh-bg"></div>
+        <div class="mesh-footer-content">
+            <div class="mesh-footer-top">
+                <a href="#" class="mesh-back-to-top">↑ BACK TO TOP</a>
+                <div class="mesh-date" id="liveDateStr">2026/07/23</div>
+            </div>
+            
+            <div class="mesh-footer-middle footer-extended-grid">
+                <!-- Left Side: Main text and Email -->
+                <div class="footer-left-content">
+                    <h2 class="mesh-availability" id="dynFooterHeadline"></h2>
+                    <p class="mesh-looking-for" id="dynFooterSubtext"></p>
+                    
+                    <div class="footer-contact-info">
+                        <p><span id="dynFooterLocation"></span></p>
+                        <p><span id="dynFooterPhone"></span></p>
+                    </div>
+
+                    <div class="mesh-big-links" style="margin-top: 2rem;">
+                        <a href="mailto:calzada.arceas@gmail.com" id="dynFooterEmail">EMAIL</a>
+                    </div>
+                </div>
+                
+                <!-- Right Side: Links and Sitemap -->
+                <div class="footer-right-content">
+                    <div class="footer-sitemap">
+                        <h4>Sitemap</h4>
+                        <ul>
+                            <li><a href="index.html#hero">Home</a></li>
+                            <li><a href="index.html#about">About</a></li>
+                            <li><a href="index.html#showcase">Showcase</a></li>
+                            <li><a href="CV_ArceasJohnCalzada.pdf" target="_blank" class="dynCVLink">Resume</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-socials">
+                        <h4>Socials</h4>
+                        <ul>
+                            <li style="display: none;"><a href="#" target="_blank" id="dynFooterLinkedIn">LinkedIn ↗</a></li>
+                            <li style="display: none;"><a href="#" id="dynFooterBehance">Behance ↗</a></li>
+                            <li style="display: none;"><a href="#" id="dynFooterDribbble">Dribbble ↗</a></li>
+                            <li style="display: none;"><a href="#" target="_blank" id="dynFooterTwitter">Twitter/X ↗</a></li>
+                            <li style="display: none;"><a href="#" target="_blank" id="dynFooterInstagram">Instagram ↗</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mesh-footer-divider"></div>
+
+            <div class="mesh-footer-bottom">
+                <div class="mesh-bottom-left">
+                    <div class="googly-eyes">
+                        <div class="eye"><div class="pupil"></div></div>
+                        <div class="eye"><div class="pupil"></div></div>
+                    </div>
+                    <div class="mesh-bottom-links">
+                        <a href="index.html#about">ABOUT</a>
+                        <a href="CV_ArceasJohnCalzada.pdf" target="_blank" class="dynCVLink">CV</a>
+                    </div>
+                    <p class="mesh-copyright" id="dynFooterCopyright">&copy; 2026 ARCEAS JOHN CALZADA. ALL RIGHTS RESERVED. THE PROJECTS SHOWCASED IN THIS PORTFOLIO ARE MY INTELLECTUAL PROPERTY UNLESS OTHERWISE CREDITED.</p>
+                </div>
+                <div class="mesh-bottom-right">
+                    <p>DESIGNED & BUILT BY ARCEAS</p>
+                    <div class="mesh-plus-icon">+</div>
+                </div>
+            </div>
+        </div>
+        <div class="mesh-watermark">
+            Designed by Arceas
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="js/main.js"></script>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <span class="lightbox-close">&times;</span>
+        <img id="lightbox-img" class="lightbox-content">
+    </div>
+
+    <style>
+        .lightbox {
+            display: none; 
+            position: fixed; 
+            z-index: 999999; 
+            left: 0; 
+            top: 0; 
+            width: 100%; 
+            height: 100%; 
+            background-color: rgba(0,0,0,0.85);
+            backdrop-filter: blur(10px);
+            justify-content: center;
+            align-items: center;
+            cursor: zoom-out;
+        }
+        .lightbox-content {
+            max-width: 90vw;
+            max-height: 90vh;
+            border-radius: 12px;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+            animation: zoomIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes zoomIn {
+            from {transform: scale(0.9); opacity: 0;}
+            to {transform: scale(1); opacity: 1;}
+        }
+        .lightbox-close {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            color: #ffffff;
+            font-size: 40px;
+            font-weight: 300;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .lightbox-close:hover {
+            color: var(--color-orange);
+        }
+        .cert-img:hover {
+            transform: scale(1.05);
+        }
+    </style>
+    <script>
+        function openLightbox(src) {
+            const lightbox = document.getElementById('lightbox');
+            const img = document.getElementById('lightbox-img');
+            img.src = src;
+            lightbox.style.display = 'flex';
+            document.body.style.overflow = 'hidden'; // Prevent scrolling
+        }
+        function closeLightbox() {
+            document.getElementById('lightbox').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+    </script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>AOS.init({ duration: 1000, once: true, offset: 100 });</script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Seed SmartiCare</title>
+</head>
+<body>
+    <h1>Adding SmartiCare...</h1>
+    <p id="status">Please wait...</p>
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyB_MZWuyfHvQgNtwRjOwBbSP8UgzHHcggU",
+            authDomain: "porfolio-website-d4a19.firebaseapp.com",
+            projectId: "porfolio-website-d4a19",
+            storageBucket: "porfolio-website-d4a19.firebasestorage.app",
+            messagingSenderId: "647014557769",
+            appId: "1:647014557769:web:95a52b547ed24c1d9eb798",
+            measurementId: "G-5WN89PPH7N"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        const smartiCareData = {
+            title: "SmartiCare",
+            subtitle: "Cataract Detection App • Flutter & Firebase",
+            image: "images/Cover.png",
+            description: "SmartiCare is a cross-platform mobile application designed for cataract detection using a Custom Convolutional Neural Network (CNN). The application empowers users and barangay health workers to assess eye symptoms and capture scans for rapid analysis.\n\nKey Responsibilities:\n- Developed the mobile user interface using Flutter & Dart based on the system design.\n- Integrated the front-end with Firebase Authentication and Firestore for storing user data, clinic lists, and scan history.\n- Managed app navigation structure, symptom assessment UI, eye scan workflow, and display of CNN-generated results.\n\nThe Challenge & Solution:\nCoordinating project timelines, documentation, testing, and deployment activities with barangay health workers required a deeply empathetic and user-centered approach. The solution involved designing an interface that was extremely accessible for non-technical users while securely handling sensitive health data in the cloud.",
+            role: "UI/UX Designer | Front-end Developer | Project Manager",
+            timeline: "2024",
+            technologies: "Flutter, Dart, Firebase, CNN Models",
+            videoUrl: "images/SmartiCare _AVP.mp4",
+            awardsImage: "images/Best Oral Research.jpg",
+            order: 1 // Keep it at the top
+        };
+
+        async function seedData() {
+            try {
+                // Check if it already exists to avoid duplicates.
+                // We'll query by title
+                const querySnapshot = await db.collection("projects").where("title", "==", "SmartiCare").get();
+                
+                if (!querySnapshot.empty) {
+                    // Update existing
+                    const docId = querySnapshot.docs[0].id;
+                    await db.collection("projects").doc(docId).set(smartiCareData, { merge: true });
+                    document.getElementById('status').innerText = "SmartiCare successfully updated in Firestore!";
+                } else {
+                    // Create new
+                    await db.collection("projects").add(smartiCareData);
+                    document.getElementById('status').innerText = "SmartiCare successfully added to Firestore!";
+                }
+            } catch (error) {
+                console.error("Error adding document: ", error);
+                document.getElementById('status').innerText = "Error: " + error.message;
+            }
+        }
+
+        seedData();
+    </script>
+</body>
+</html>

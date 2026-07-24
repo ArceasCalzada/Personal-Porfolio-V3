@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arceas John Calzada - Portfolio</title>
+    <meta name="description" content="Portfolio of Arceas John Calzada, UI/UX Designer and Developer.">
+    <!-- Google Fonts: Montserrat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Spline+Sans+Mono:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">Arceas John Calzada</div>
+        <div class="nav-links">
+            <div class="nav-indicator"></div>
+            <a href="#hero">Home</a>
+            <a href="#about">About</a>
+            <a href="#showcase">Showcase</a>
+            <a href="#contact">Contact</a>
+        </div>
+        <div class="nav-actions">
+            <a href="CV_ArceasJohnCalzada.pdf" target="_blank" class="nav-cv-btn dynCVLink" style="padding: 0.4rem 1.2rem; border-radius: 20px; font-weight: 600; font-size: 0.9rem; text-decoration: none; color: var(--color-bg); background: var(--color-text-light); transition: all 0.3s ease; margin-right: 0.5rem; display: inline-flex; align-items: center; gap: 0.3rem; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">CV <span style="font-size: 1.1rem; line-height: 1;">↗</span></a>
+            <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle Theme">
+                <span class="icon-sun">☀️</span>
+                <span class="icon-moon">🌙</span>
+            </button>
+        </div>
+    </nav>
+
+    <section id="hero" class="hero fade-in">
+        <div class="hero-content">
+            <div class="hero-text-column">
+                <h1 class="hero-title" id="dynHeroTitle"></h1>
+                <p class="hero-subtitle" id="dynHeroSub1"></p>
+                <div class="hero-actions-minimal">
+                    <a href="CV_ArceasJohnCalzada.pdf" target="_blank" class="minimal-link dynCVLink">CV <span class="link-arrow">↗</span></a>
+                    <a href="#" target="_blank" class="minimal-link">LinkedIn <span class="link-arrow">↗</span></a>
+                    <a href="mailto:calzada.arceas@gmail.com" class="minimal-link">calzada.arceas@gmail.com <span class="link-arrow">↗</span></a>
+                </div>
+            </div>
+            <div class="hero-image-column">
+                <div style="width: 100%; max-width: 480px; position: relative;">
+                    <div class="stacked-carousel" id="heroProfileCarousel">
+                    </div>
+                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; height: 100%; background: var(--color-orange); border-radius: 50%; z-index: -1; filter: blur(80px); opacity: 0.15; pointer-events: none;"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main class="content-wrapper">
+
+        <section id="about" class="about fade-in" data-bg-dark="#1a1412" data-bg-light="#fff5f0" style="padding-top: 5rem; display: block;">
+            <div class="skills-experience-header">
+                <h2>Skills & Experience</h2>
+                <a href="about.html" style="background: #1a1a1a; color: #ffffff; border: none; border-radius: 30px; padding: 0.8rem 1.8rem; text-decoration: none; font-size: 0.95rem; font-weight: 500; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1);" onmouseover="this.style.background='#333'; this.style.transform='translateY(-2px)'" onmouseout="this.style.background='#1a1a1a'; this.style.transform='translateY(0)'">
+                    About me ↗
+                </a>
+            </div>
+            
+            <div class="skills-experience-grid">
+                <!-- Left Column: Stats -->
+                <div class="stats-column">
+                    <div class="stat-item">
+                        <div class="stat-number" id="dynIndexStat1Value"></div>
+                        <div class="stat-label" id="dynIndexStat1Label"></div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="dynIndexStat2Value"></div>
+                        <div class="stat-label" id="dynIndexStat2Label"></div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Content -->
+                <div class="content-column">
+                    <h4>What I Do</h4>
+                    <div id="dynAboutTextContainer" style="font-size: clamp(1rem, 1.5vw, 1.15rem); line-height: 1.6; color: var(--color-text-muted); margin-bottom: 3rem; min-height: 150px;">
+                        
+                    </div>
+
+                    <div id="dynIndexSkills" style="display: flex; flex-wrap: wrap; margin-bottom: 4rem; min-height: 50px;">
+                        
+                    </div>
+
+                    <h4>Software & Tech Stack</h4>
+                    <div id="dynIndexSoftware" style="display: flex; flex-wrap: wrap; min-height: 50px;">
+                        
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+        <section id="showcase" class="showcase fade-in" data-bg-dark="#11161a" data-bg-light="#f0f5fa">
+            <div class="section-header">
+                <h2>Showcase</h2>
+            </div>
+            
+            <div class="tabs-container">
+                <div class="tabs-header">
+                    <button class="tab-btn active" data-target="tab-projects">Projects</button>
+                    <button class="tab-btn" data-target="tab-design">Design</button>
+                    <button class="tab-btn" data-target="tab-certificates">Certificates</button>
+                </div>
+                
+                <style>
+                    .editorial-stagger-grid {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                        gap: 2rem;
+                        align-items: flex-start;
+                    }
+                    .stagger-col {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 3rem;
+                    }
+                    @media (min-width: 768px) {
+                        .stagger-col {
+                            gap: 6rem;
+                        }
+                    }
+                    @media (min-width: 992px) {
+                        .stagger-col.offset-down {
+                            margin-top: 8rem;
+                        }
+                        .editorial-stagger-grid {
+                            gap: 5rem;
+                        }
+                    }
+                    .stagger-card img {
+                        transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+                    }
+                    .stagger-card:hover img {
+                        transform: scale(1.05);
+                    }
+                    .stagger-card h3 {
+                        font-size: clamp(1.8rem, 3vw, 2.4rem);
+                        margin-bottom: 0.5rem;
+                        color: var(--color-text-light);
+                    }
+                    .stagger-card .subtitle {
+                        font-size: 1.1rem;
+                        color: var(--color-orange);
+                        margin-bottom: 0.8rem;
+                        font-weight: 500;
+                    }
+                    .stagger-card .desc {
+                        font-size: 0.95rem;
+                        color: var(--color-text-muted);
+                        margin-bottom: 1.5rem;
+                        line-height: 1.6;
+                        opacity: 0.9;
+                    }
+                    .stagger-img-link {
+                        display: block;
+                        position: relative;
+                        cursor: pointer;
+                    }
+                    .hover-overlay {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background: rgba(0, 0, 0, 0.5);
+                        backdrop-filter: blur(4px);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        opacity: 0;
+                        transition: opacity 0.4s ease;
+                        z-index: 2;
+                    }
+                    .stagger-img-link:hover .hover-overlay {
+                        opacity: 1;
+                    }
+                    .hover-overlay span {
+                        color: #fff;
+                        font-size: 1.1rem;
+                        font-weight: 600;
+                        text-transform: uppercase;
+                        letter-spacing: 0.1em;
+                        transform: translateY(15px);
+                        transition: transform 0.4s ease;
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5rem;
+                    }
+                    .stagger-img-link:hover .hover-overlay span {
+                        transform: translateY(0);
+                    }
+                </style>
+
+                <div class="tabs-content">
+                    <div id="tab-projects" class="tab-pane active">
+                        <div class="editorial-stagger-grid">
+                            <!-- Left Column -->
+                            <div class="stagger-col" id="projects-left-col">
+                                <!-- Dynamically injected from Firebase -->
+                            </div>
+                            <!-- Right Column -->
+                            <div class="stagger-col" id="projects-right-col">
+                                <!-- Dynamically injected from Firebase -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="tab-design" class="tab-pane">
+                        <div class="editorial-stagger-grid">
+                            <!-- Left Column -->
+                            <div class="stagger-col" id="designs-left-col">
+                                <!-- Dynamically injected from Firebase -->
+                            </div>
+                            <!-- Right Column -->
+                            <div class="stagger-col" id="designs-right-col">
+                                <!-- Dynamically injected from Firebase -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="tab-certificates" class="tab-pane">
+                        <div class="showcase-grid" id="certificates-container">
+                            <!-- Dynamically injected from Firebase -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+        <footer id="contact" class="premium-mesh-footer fade-in" data-bg-dark="#151116" data-bg-light="#faf5fa">
+        <div class="mesh-bg"></div>
+        <div class="mesh-footer-content">
+            <div class="mesh-footer-top">
+                <a href="#" class="mesh-back-to-top">↑ BACK TO TOP</a>
+                <div class="mesh-date" id="liveDateStr">2026/07/23</div>
+            </div>
+            
+            <div class="mesh-footer-middle footer-extended-grid">
+                <!-- Left Side: Main text and Email -->
+                <div class="footer-left-content">
+                    <h2 class="mesh-availability" id="dynFooterHeadline"></h2>
+                    <p class="mesh-looking-for" id="dynFooterSubtext"></p>
+                    
+                    <div class="footer-contact-info">
+                        <p><span id="dynFooterLocation"></span></p>
+                        <p><span id="dynFooterPhone"></span></p>
+                    </div>
+
+                    <div class="mesh-big-links" style="margin-top: 2rem;">
+                        <a href="mailto:calzada.arceas@gmail.com" id="dynFooterEmail">EMAIL</a>
+                    </div>
+                </div>
+                
+                <!-- Right Side: Links and Sitemap -->
+                <div class="footer-right-content">
+                    <div class="footer-sitemap">
+                        <h4>Sitemap</h4>
+                        <ul>
+                            <li><a href="index.html#hero">Home</a></li>
+                            <li><a href="index.html#about">About</a></li>
+                            <li><a href="index.html#showcase">Showcase</a></li>
+                            <li><a href="CV_ArceasJohnCalzada.pdf" target="_blank" class="dynCVLink">Resume</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-socials">
+                        <h4>Socials</h4>
+                        <ul>
+                            <li style="display: none;"><a href="#" target="_blank" id="dynFooterLinkedIn">LinkedIn ↗</a></li>
+                            <li style="display: none;"><a href="#" id="dynFooterBehance">Behance ↗</a></li>
+                            <li style="display: none;"><a href="#" id="dynFooterDribbble">Dribbble ↗</a></li>
+                            <li style="display: none;"><a href="#" target="_blank" id="dynFooterTwitter">Twitter/X ↗</a></li>
+                            <li style="display: none;"><a href="#" target="_blank" id="dynFooterInstagram">Instagram ↗</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mesh-footer-divider"></div>
+
+            <div class="mesh-footer-bottom">
+                <div class="mesh-bottom-left">
+                    <div class="googly-eyes">
+                        <div class="eye"><div class="pupil"></div></div>
+                        <div class="eye"><div class="pupil"></div></div>
+                    </div>
+                    <div class="mesh-bottom-links">
+                        <a href="index.html#about">ABOUT</a>
+                        <a href="CV_ArceasJohnCalzada.pdf" target="_blank" class="dynCVLink">CV</a>
+                    </div>
+                    <p class="mesh-copyright" id="dynFooterCopyright">&copy; 2026 ARCEAS JOHN CALZADA. ALL RIGHTS RESERVED. THE PROJECTS SHOWCASED IN THIS PORTFOLIO ARE MY INTELLECTUAL PROPERTY UNLESS OTHERWISE CREDITED.</p>
+                </div>
+                <div class="mesh-bottom-right">
+                    <p>DESIGNED & BUILT BY ARCEAS</p>
+                    <div class="mesh-plus-icon">+</div>
+                </div>
+            </div>
+        </div>
+        <div class="mesh-watermark">
+            Designed by Arceas
+        </div>
+    </footer>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js" defer></script>
+    <script src="js/main.js" defer></script>
+
+    <!-- ==================== IMAGE VIEWER MODAL ==================== -->
+    <div id="imageViewerModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 2000; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s; padding: 2rem;">
+        <span id="closeImageViewer" style="position: absolute; top: 20px; right: 30px; color: #fff; font-size: 2.5rem; font-weight: bold; cursor: pointer; transition: color 0.2s; z-index: 2001;">&times;</span>
+        <button id="viewerPrevBtn" style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.1); border: none; color: white; font-size: 2rem; padding: 1rem; cursor: pointer; border-radius: 50%; display: none; z-index: 2001;">&#10094;</button>
+        <img id="viewerImage" src="" style="max-width: 100%; max-height: 90vh; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); object-fit: contain;">
+        <button id="viewerNextBtn" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.1); border: none; color: white; font-size: 2rem; padding: 1rem; cursor: pointer; border-radius: 50%; display: none; z-index: 2001;">&#10095;</button>
+    </div>
+</body>
+</html>
