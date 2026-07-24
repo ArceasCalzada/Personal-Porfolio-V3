@@ -889,9 +889,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 3. Fetch Designs
     await loadStaggeredGrid('designs', 'designs-left-col', 'designs-right-col', 'View Design ↗');
 
-    // 4. Fetch Certificates (About Page)
+    // 4. Fetch Certificates (homepage and about page)
     const certContainer = document.getElementById('dynAboutPageCertificates');
-    if (certContainer) {
+    const indexCertContainer = document.getElementById('certificates-container');
+    if (certContainer || indexCertContainer) {
         try {
             const snapshot = await db.collection('certificates').get();
             const items = [];
@@ -903,23 +904,48 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return (a.timestamp || 0) - (b.timestamp || 0);
             });
 
-            items.forEach(item => {
-                certContainer.innerHTML += `
-                    <div class="editorial-exp-row" style="align-items: flex-start;">
-                        <div class="editorial-exp-date" style="width: 150px;">
-                            <img src="${window.getImg(item.image)}" alt="${item.title} Badge" class="cert-img" onclick="openLightbox(this.src)" style="width: 100%; border-radius: 8px; border: 1px solid var(--glass-border); cursor: pointer; transition: transform 0.2s ease;">
+            if (certContainer) {
+                items.forEach(item => {
+                    certContainer.innerHTML += `
+                        <div class="editorial-exp-row" style="align-items: flex-start;">
+                            <div class="editorial-exp-date" style="width: 150px;">
+                                <img src="${window.getImg(item.image)}" alt="${item.title} Badge" class="cert-img" onclick="openLightbox(this.src)" style="width: 100%; border-radius: 8px; border: 1px solid var(--glass-border); cursor: pointer; transition: transform 0.2s ease;">
+                            </div>
+                            <div class="editorial-exp-role">
+                                <h3 style="margin: 0 0 0.2rem 0; font-size: 1.25rem;">${item.title || 'Certificate Title'}</h3>
+                                <p style="margin: 0 0 0.5rem 0; font-size: 0.95rem; color: var(--color-text-muted);">${item.subtitle || 'Issuer'} · Issued: ${item.certDate || 'N/A'}</p>
+                                ${item.certCredentialId ? `
+                                    <p style="margin: 0 0 1rem 0; font-size: 0.85rem; color: var(--color-text-muted);">Credential ID: ${item.certCredentialId}</p>
+                                    <a href="https://www.credly.com/badges/${item.certCredentialId}/public_url" target="_blank" style="font-size: 0.9rem; color: var(--color-text); text-decoration: none; font-weight: 500;">Verify Credential ↗</a>
+                                ` : ''}
+                            </div>
                         </div>
-                        <div class="editorial-exp-role">
-                            <h3 style="margin: 0 0 0.2rem 0; font-size: 1.25rem;">${item.title || 'Certificate Title'}</h3>
-                            <p style="margin: 0 0 0.5rem 0; font-size: 0.95rem; color: var(--color-text-muted);">${item.subtitle || 'Issuer'} · Issued: ${item.certDate || 'N/A'}</p>
-                            ${item.certCredentialId ? `
-                                <p style="margin: 0 0 1rem 0; font-size: 0.85rem; color: var(--color-text-muted);">Credential ID: ${item.certCredentialId}</p>
-                                <a href="https://www.credly.com/badges/${item.certCredentialId}/public_url" target="_blank" style="font-size: 0.9rem; color: var(--color-text); text-decoration: none; font-weight: 500;">Verify Credential ↗</a>
-                            ` : ''}
+                    `;
+                });
+            }
+
+            if (indexCertContainer) {
+                items.forEach(item => {
+                    const imgUrl = window.getImg(item.image);
+                    const imagesJson = JSON.stringify([imgUrl]).replace(/"/g, '&quot;');
+                    indexCertContainer.innerHTML += `
+                        <div class="showcase-item fade-in">
+                            <div class="showcase-img-wrap" style="aspect-ratio: ${item.aspectRatio === 'portrait' ? '3/4' : '4/3'};">
+                                <img src="${imgUrl}" alt="${item.title}">
+                                <div class="showcase-overlay">
+                                    ${item.certCredentialId ? `
+                                        <a href="https://www.credly.com/badges/${item.certCredentialId}/public_url" target="_blank" class="view-btn">Verify Credential ↗</a>
+                                    ` : `<a class="view-btn" onclick="openImageViewer(${imagesJson})">Zoom In 🔍</a>`}
+                                </div>
+                            </div>
+                            <div class="showcase-info">
+                                <h3>${item.title}</h3>
+                                <p>${item.subtitle} · ${item.certDate || 'N/A'}</p>
+                            </div>
                         </div>
-                    </div>
-                `;
-            });
+                    `;
+                });
+            }
         } catch (error) {
             console.error("Error fetching certificates:", error);
         }
