@@ -1,3 +1,4 @@
+window.getImg = (p) => p ? (p.startsWith('images/') ? 'src/' + p : p) : 'src/images/placeholder.png';
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Intersection Observer for Fade-In Animations
     const fadeElements = document.querySelectorAll('.fade-in');
@@ -788,7 +789,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             let htmlString = '';
             let index = 1;
             items.forEach(data => {
-                htmlString += `<img src="${data.image}" alt="Carousel Image" class="stack-${index}">`;
+                htmlString += `<img src="${window.getImg(data.image)}" alt="Carousel Image" class="stack-${index}">`;
                 index++;
             });
 
@@ -861,7 +862,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <div class="stagger-card fade-in">
                         <div style="border-radius: 8px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.3); border: 1px solid var(--glass-border); margin-bottom: 2rem;">
                             ${linkHTML}
-                                <img src="${item.image || 'images/placeholder.png'}" alt="${item.title}" style="width: 100%; height: 100%; object-fit: cover;">
+                                <img src="${window.getImg(item.image)}" alt="${item.title}" style="width: 100%; height: 100%; object-fit: cover;">
                                 <div class="hover-overlay">
                                     <span>${viewText}</span>
                                 </div>
@@ -906,7 +907,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 certContainer.innerHTML += `
                     <div class="editorial-exp-row" style="align-items: flex-start;">
                         <div class="editorial-exp-date" style="width: 150px;">
-                            <img src="${item.image || 'images/placeholder.png'}" alt="${item.title} Badge" class="cert-img" onclick="openLightbox(this.src)" style="width: 100%; border-radius: 8px; border: 1px solid var(--glass-border); cursor: pointer; transition: transform 0.2s ease;">
+                            <img src="${window.getImg(item.image)}" alt="${item.title} Badge" class="cert-img" onclick="openLightbox(this.src)" style="width: 100%; border-radius: 8px; border: 1px solid var(--glass-border); cursor: pointer; transition: transform 0.2s ease;">
                         </div>
                         <div class="editorial-exp-role">
                             <h3 style="margin: 0 0 0.2rem 0; font-size: 1.25rem;">${item.title || 'Certificate Title'}</h3>
@@ -1051,4 +1052,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
+    // -- Live Date and Time Updater --
+    const liveDateEl = document.getElementById('liveDateStr');
+    if (liveDateEl) {
+        const updateLiveDate = () => {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const date = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            liveDateEl.textContent = `${year}/${month}/${date} ${hours}:${minutes}:${seconds}`;
+        };
+        updateLiveDate();
+        setInterval(updateLiveDate, 1000);
+    }
+
 });
+

@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Spline+Sans+Mono:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="src/css/style.css">
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
 </head>
 <body>
@@ -23,7 +23,7 @@
             <a href="#contact">Contact</a>
         </div>
         <div class="nav-actions">
-            <a href="CV_ArceasJohnCalzada.pdf" target="_blank" class="nav-cv-btn dynCVLink" style="padding: 0.4rem 1.2rem; border-radius: 20px; font-weight: 600; font-size: 0.9rem; text-decoration: none; color: var(--color-bg); background: var(--color-text-light); transition: all 0.3s ease; margin-right: 0.5rem; display: inline-flex; align-items: center; gap: 0.3rem; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">CV <span style="font-size: 1.1rem; line-height: 1;">↗</span></a>
+            <a href="assets/docs/CV_ArceasJohnCalzada.pdf" target="_blank" class="nav-cv-btn dynCVLink" style="padding: 0.4rem 1.2rem; border-radius: 20px; font-weight: 600; font-size: 0.9rem; text-decoration: none; color: var(--color-bg); background: var(--color-text-light); transition: all 0.3s ease; margin-right: 0.5rem; display: inline-flex; align-items: center; gap: 0.3rem; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">CV <span style="font-size: 1.1rem; line-height: 1;">↗</span></a>
             <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle Theme">
                 <span class="icon-sun">☀️</span>
                 <span class="icon-moon">🌙</span>
@@ -37,7 +37,7 @@
                 <h1 class="hero-title" id="dynHeroTitle"></h1>
                 <p class="hero-subtitle" id="dynHeroSub1"></p>
                 <div class="hero-actions-minimal">
-                    <a href="CV_ArceasJohnCalzada.pdf" target="_blank" class="minimal-link dynCVLink">CV <span class="link-arrow">↗</span></a>
+                    <a href="assets/docs/CV_ArceasJohnCalzada.pdf" target="_blank" class="minimal-link dynCVLink">CV <span class="link-arrow">↗</span></a>
                     <a href="#" target="_blank" class="minimal-link">LinkedIn <span class="link-arrow">↗</span></a>
                     <a href="mailto:calzada.arceas@gmail.com" class="minimal-link">calzada.arceas@gmail.com <span class="link-arrow">↗</span></a>
                 </div>
@@ -266,7 +266,7 @@
                             <li><a href="index.html#hero">Home</a></li>
                             <li><a href="index.html#about">About</a></li>
                             <li><a href="index.html#showcase">Showcase</a></li>
-                            <li><a href="CV_ArceasJohnCalzada.pdf" target="_blank" class="dynCVLink">Resume</a></li>
+                            <li><a href="assets/docs/CV_ArceasJohnCalzada.pdf" target="_blank" class="dynCVLink">Resume</a></li>
                         </ul>
                     </div>
                     
@@ -293,7 +293,7 @@
                     </div>
                     <div class="mesh-bottom-links">
                         <a href="index.html#about">ABOUT</a>
-                        <a href="CV_ArceasJohnCalzada.pdf" target="_blank" class="dynCVLink">CV</a>
+                        <a href="assets/docs/CV_ArceasJohnCalzada.pdf" target="_blank" class="dynCVLink">CV</a>
                     </div>
                     <p class="mesh-copyright" id="dynFooterCopyright">&copy; 2026 ARCEAS JOHN CALZADA. ALL RIGHTS RESERVED. THE PROJECTS SHOWCASED IN THIS PORTFOLIO ARE MY INTELLECTUAL PROPERTY UNLESS OTHERWISE CREDITED.</p>
                 </div>
@@ -311,7 +311,7 @@
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js" defer></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js" defer></script>
-    <script src="js/main.js" defer></script>
+    <script src="src/js/main.js" defer></script>
 
     <!-- ==================== IMAGE VIEWER MODAL ==================== -->
     <div id="imageViewerModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 2000; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s; padding: 2rem;">

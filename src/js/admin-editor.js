@@ -1,3 +1,4 @@
+window.getImg = (p) => p ? (p.startsWith('images/') ? '../src/' + p : p) : '../src/images/placeholder.png';
 // Firebase Configuration
 const firebaseConfig = {
   apiKey: "AIzaSyB_MZWuyfHvQgNtwRjOwBbSP8UgzHHcggU",
@@ -120,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
         titleOut.textContent = titleIn.value || 'Project Name';
         subtitleOut.textContent = subtitleIn.value || 'Category';
         descOut.textContent = descIn.value || 'Description will appear here.';
-        imageOut.src = imageIn.value || 'images/placeholder.png';
+        imageOut.src = window.getImg(imageIn.value);
         aspectOut.style.aspectRatio = aspectIn.value || '1/1';
     }
 
@@ -295,7 +296,7 @@ document.addEventListener('DOMContentLoaded', () => {
         div.style.alignItems = 'center';
         
         const preview = document.createElement('img');
-        preview.src = url || 'images/placeholder.png';
+        preview.src = window.getImg(url);
         preview.style.width = '50px';
         preview.style.height = '50px';
         preview.style.objectFit = 'cover';
@@ -310,7 +311,7 @@ document.addEventListener('DOMContentLoaded', () => {
         input.style.flex = '1';
         
         input.addEventListener('input', (e) => {
-            preview.src = e.target.value.trim() || 'images/placeholder.png';
+            preview.src = window.getImg(e.target.value.trim());
         });
 
         const removeBtn = document.createElement('button');

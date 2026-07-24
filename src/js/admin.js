@@ -1,3 +1,4 @@
+window.getImg = (p) => p ? (p.startsWith('images/') ? '../src/' + p : p) : '../src/images/placeholder.png';
 // Firebase is loaded globally via compat scripts in admin.html
 const firebaseConfig = {
   apiKey: "AIzaSyB_MZWuyfHvQgNtwRjOwBbSP8UgzHHcggU",
@@ -381,7 +382,7 @@ async function loadItems(collectionName) {
                     <div style="cursor: grab; margin-bottom: 0.8rem; color: #5f6368; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.03); padding: 0.3rem; border-radius: 4px;">
                         ⋮⋮ Drag to reorder
                     </div>
-                    <img src="${data.image || 'images/placeholder.png'}" class="project-card-image" alt="Thumbnail" draggable="false">
+                    <img src="${window.getImg(data.image)}" class="project-card-image" alt="Thumbnail" draggable="false">
                     <h4 style="margin: 0; font-size: 1.2rem; margin-bottom: 0.2rem;">${data.title || 'Untitled'}</h4>
                     <p style="margin: 0; color: var(--color-text-muted); font-size: 0.9rem;">${data.subtitle || 'No Category'}</p>
                     
@@ -502,7 +503,7 @@ async function loadCarouselItems(collectionName) {
                     <div style="cursor: grab; margin-bottom: 0.8rem; color: #5f6368; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.03); padding: 0.3rem; border-radius: 4px;">
                         ⋮⋮ Drag to reorder
                     </div>
-                    <img src="${data.image || 'images/placeholder.png'}" class="project-card-image" alt="Carousel Image" draggable="false" style="height: 250px; width: auto; max-width: 100%; margin: 0 auto 1rem auto;">
+                    <img src="${window.getImg(data.image)}" class="project-card-image" alt="Carousel Image" draggable="false" style="height: 250px; width: auto; max-width: 100%; margin: 0 auto 1rem auto;">
                     
                     <div class="project-actions-grid" style="margin-top: 0;">
                         <button class="delete-btn" onclick="deleteItem('${data.id}', '${collectionName}')">Delete</button>
@@ -924,7 +925,7 @@ async function loadHeroSettings() {
             document.getElementById('setHeroTitle').value = data.heroTitle || '';
             document.getElementById('setHeroSub1').value = data.heroSub1 || '';
             document.getElementById('setHeroSub2').value = data.heroSub2 || '';
-            document.getElementById('setCvLink').value = data.cvLink || 'CV_ArceasJohnCalzada.pdf';
+            document.getElementById('setCvLink').value = data.cvLink || 'assets/docs/CV_ArceasJohnCalzada.pdf';
         }
     } catch (error) {
         console.error("Error loading hero settings:", error);
