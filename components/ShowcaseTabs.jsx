@@ -14,6 +14,7 @@ export default function ShowcaseTabs() {
   const [viewerImages, setViewerImages] = useState([]);
   const [viewerIndex, setViewerIndex] = useState(0);
   const [isViewerOpen, setIsViewerOpen] = useState(false);
+  const [activeProjectModal, setActiveProjectModal] = useState(null);
 
   useEffect(() => {
     async function fetchStaggered(collectionName) {
@@ -45,10 +46,15 @@ export default function ShowcaseTabs() {
     async function fetchCertificates() {
       try {
         const snapshot = await getDocs(collection(db, "certificates"));
-        const items = [];
-        snapshot.forEach((doc) => items.push({ id: doc.id, ...doc.data() }));
-        items.sort((a, b) => (a.order || 999999) - (b.order || 999999));
-        setCertificates(items);
+        const certs = [];
+        snapshot.forEach((doc) => certs.push({ id: doc.id, ...doc.data() }));
+        certs.sort((a, b) => {
+          const orderA = a.order !== undefined ? a.order : 999999;
+          const orderB = b.order !== undefined ? b.order : 999999;
+          if (orderA !== orderB) return orderA - orderB;
+          return (a.timestamp || 0) - (b.timestamp || 0);
+        });
+        setCertificates(certs);
       } catch (error) {
         console.error("Error fetching certificates:", error);
       }
@@ -66,11 +72,12 @@ export default function ShowcaseTabs() {
   };
 
   const StaggeredColumn = ({ items, type, isOffset }) => (
-    <div className={`stagger-col ${isOffset ? "offset-down" : ""}`}>
+    <div className={`stagger-column ${isOffset ? "offset" : ""}`}>
       {items.map((item) => {
-        let shortDesc = item.description || "";
-        if (shortDesc.length > 120) shortDesc = shortDesc.substring(0, 120) + "...";
         const imgSrc = item.image?.startsWith("images/") ? `/src/${item.image}` : (item.image || "/src/images/Cover.png");
+        const shortDesc = item.description
+          ? item.description.replace(/[#*`_]/g, "").substring(0, 140) + "..."
+          : "";
         
         let linkContent;
         if (type === "designs") {
@@ -92,10 +99,10 @@ export default function ShowcaseTabs() {
           }
         } else {
           linkContent = (
-            <Link href={`/projects/${item.id}?collection=projects`} className="stagger-img-link" style={{ aspectRatio: item.aspectRatio || "1/1" }}>
+            <div onClick={() => setActiveProjectModal(item)} className="stagger-img-link" style={{ aspectRatio: item.aspectRatio || "1/1", cursor: "pointer" }}>
               <img src={imgSrc} alt={item.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               <div className="hover-overlay"><span>View Project ↗</span></div>
-            </Link>
+            </div>
           );
         }
 
@@ -104,7 +111,7 @@ export default function ShowcaseTabs() {
             <div style={{ borderRadius: "8px", overflow: "hidden", boxShadow: "0 20px 40px rgba(0,0,0,0.3)", border: "1px solid var(--glass-border)", marginBottom: "2rem" }}>
               {linkContent}
             </div>
-            <h3>{item.title}</h3>
+            <h3 style={{ cursor: type === "projects" ? "pointer" : "default" }} onClick={() => type === "projects" && setActiveProjectModal(item)}>{item.title}</h3>
             <p className="subtitle">{item.subtitle}</p>
             <p className="desc">{shortDesc}</p>
           </motion.div>
@@ -185,6 +192,125 @@ export default function ShowcaseTabs() {
           {viewerImages.length > 1 && (
             <button onClick={(e) => { e.stopPropagation(); setViewerIndex((prev) => (prev + 1) % viewerImages.length); }} style={{ position: "absolute", right: "20px", background: "rgba(255,255,255,0.1)", border: "none", color: "white", fontSize: "2rem", padding: "1rem", cursor: "pointer", borderRadius: "50%", zIndex: 2001 }}>&#10095;</button>
           )}
+        </div>
+      )}
+
+      {/* Interactive Full-Screen Project Case Study Modal */}
+      {activeProjectModal && (
+        <div 
+          style={{ 
+            position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", 
+            background: "rgba(10, 10, 12, 0.95)", backdropFilter: "blur(12px)", 
+            zIndex: 9999, overflowY: "auto", padding: "4rem 1.5rem 2rem 1.5rem" 
+          }}
+          onClick={() => setActiveProjectModal(null)}
+        >
+          <div 
+            style={{ 
+              maxWidth: "900px", margin: "0 auto", background: "#16161a", 
+              borderRadius: "24px", border: "1px solid rgba(255,255,255,0.1)", 
+              padding: "2.5rem 2rem", color: "#fff", position: "relative",
+              boxShadow: "0 30px 80px rgba(0,0,0,0.8)"
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button 
+              onClick={() => setActiveProjectModal(null)}
+              style={{ 
+                position: "absolute", top: "1.5rem", right: "1.5rem", 
+                background: "rgba(255,255,255,0.1)", border: "none", color: "#fff", 
+                fontSize: "1.5rem", width: "40px", height: "40px", borderRadius: "50%", 
+                cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center"
+              }}
+            >
+              ✕
+            </button>
+
+            <span style={{ fontSize: "0.85rem", textTransform: "uppercase", color: "var(--color-orange)", letterSpacing: "1px", fontWeight: 600 }}>
+              Project Case Study
+            </span>
+            <h2 style={{ fontSize: "clamp(1.8rem, 4vw, 2.8rem)", margin: "0.5rem 0 1rem 0", lineHeight: 1.2 }}>
+              {activeProjectModal.title}
+            </h2>
+
+            {activeProjectModal.subtitle && (
+              <p style={{ color: "#9aa0a6", fontSize: "1.1rem", marginBottom: "2rem" }}>
+                {activeProjectModal.subtitle}
+              </p>
+            )}
+
+            {/* Video or Hero Image */}
+            {activeProjectModal.videoUrl ? (
+              <div style={{ width: "100%", borderRadius: "16px", overflow: "hidden", marginBottom: "2rem", background: "#000" }}>
+                <video src={activeProjectModal.videoUrl} controls autoPlay muted loop style={{ width: "100%", maxHeight: "500px", objectFit: "contain" }} />
+              </div>
+            ) : activeProjectModal.image ? (
+              <div style={{ width: "100%", borderRadius: "16px", overflow: "hidden", marginBottom: "2rem" }}>
+                <img 
+                  src={activeProjectModal.image.startsWith("images/") ? `/src/${activeProjectModal.image}` : activeProjectModal.image} 
+                  alt={activeProjectModal.title} 
+                  style={{ width: "100%", maxHeight: "500px", objectFit: "cover" }} 
+                />
+              </div>
+            ) : null}
+
+            {/* Metadata Grid */}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "1.5rem", padding: "1.5rem", background: "rgba(255,255,255,0.03)", borderRadius: "16px", marginBottom: "2rem", border: "1px solid rgba(255,255,255,0.05)" }}>
+              {activeProjectModal.role && (
+                <div>
+                  <strong style={{ color: "#9aa0a6", fontSize: "0.85rem", display: "block", textTransform: "uppercase" }}>My Role</strong>
+                  <span style={{ fontSize: "1rem", fontWeight: 500 }}>{activeProjectModal.role}</span>
+                </div>
+              )}
+              {activeProjectModal.timeline && (
+                <div>
+                  <strong style={{ color: "#9aa0a6", fontSize: "0.85rem", display: "block", textTransform: "uppercase" }}>Timeline</strong>
+                  <span style={{ fontSize: "1rem", fontWeight: 500 }}>{activeProjectModal.timeline}</span>
+                </div>
+              )}
+              {activeProjectModal.technologies && (
+                <div>
+                  <strong style={{ color: "#9aa0a6", fontSize: "0.85rem", display: "block", textTransform: "uppercase" }}>Technologies</strong>
+                  <span style={{ fontSize: "1rem", fontWeight: 500 }}>{activeProjectModal.technologies}</span>
+                </div>
+              )}
+            </div>
+
+            {/* Detailed Description */}
+            {activeProjectModal.description && (
+              <div style={{ fontSize: "1.05rem", lineHeight: 1.8, color: "#e8eaed", whiteSpace: "pre-wrap", marginBottom: "2.5rem" }}>
+                {activeProjectModal.description}
+              </div>
+            )}
+
+            {/* Gallery Images */}
+            {activeProjectModal.galleryImages && activeProjectModal.galleryImages.length > 0 && (
+              <div>
+                <h4 style={{ fontSize: "1.2rem", marginBottom: "1rem", color: "#fff" }}>Project Gallery</h4>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: "1rem" }}>
+                  {activeProjectModal.galleryImages.map((gImg, idx) => (
+                    <img 
+                      key={idx} 
+                      src={gImg.startsWith("images/") ? `/src/${gImg}` : gImg} 
+                      alt={`Gallery ${idx + 1}`} 
+                      style={{ width: "100%", height: "140px", objectFit: "cover", borderRadius: "12px", cursor: "pointer", border: "1px solid rgba(255,255,255,0.1)" }} 
+                      onClick={() => openViewer([gImg, ...activeProjectModal.galleryImages])}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div style={{ marginTop: "3rem", textOverflow: "ellipsis" }}>
+              <button 
+                onClick={() => setActiveProjectModal(null)} 
+                className="btn btn-secondary" 
+                style={{ width: "100%", padding: "0.9rem", borderRadius: "12px", cursor: "pointer" }}
+              >
+                ← Back to Showcase
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </section>
