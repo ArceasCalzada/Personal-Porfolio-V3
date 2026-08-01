@@ -35,25 +35,19 @@ export default function Onboarding() {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    // 1. Check if onboarding was already shown in this session
     let onboardingSeen = false;
     try {
       onboardingSeen = sessionStorage.getItem("onboarding-seen") === "true";
-    } catch (e) {
-      console.warn("sessionStorage access denied:", e);
-    }
+    } catch (e) {}
 
     if (onboardingSeen) {
-      return; // If seen, do not mount/render onboarding
+      return;
     }
 
-    // 2. If not seen, show the onboarding screen and lock scrolling
     setIsVisible(true);
-    document.body.style.overflow = "hidden";
 
-    // 3. Increment progress counter from 0 to 100 smoothly
-    const duration = 2000; // 2 seconds total animation duration
-    const intervalTime = 30; // Update every 30ms
+    const duration = 1800; // 1.8 seconds total
+    const intervalTime = 30;
     const totalSteps = duration / intervalTime;
     let currentStep = 0;
 
@@ -66,24 +60,20 @@ export default function Onboarding() {
         clearInterval(progressTimer);
         setTimeout(() => {
           setIsVisible(false);
-          document.body.style.overflow = "";
           try {
             sessionStorage.setItem("onboarding-seen", "true");
           } catch (e) {}
-        }, 300);
+        }, 200);
       }
     }, intervalTime);
 
-    // Fail-safe backup timer: force dismiss after 2.8s no matter what
     const fallbackTimer = setTimeout(() => {
       setIsVisible(false);
-      document.body.style.overflow = "";
-    }, 2800);
+    }, 2200);
 
     return () => {
       clearInterval(progressTimer);
       clearTimeout(fallbackTimer);
-      document.body.style.overflow = "";
     };
   }, []);
 
@@ -92,6 +82,7 @@ export default function Onboarding() {
       {isVisible && (
         <motion.div
           className="onboarding-overlay"
+          style={{ pointerEvents: isVisible ? "auto" : "none" }}
           initial={{ opacity: 1 }}
           exit={{ 
             y: "-100%", 
