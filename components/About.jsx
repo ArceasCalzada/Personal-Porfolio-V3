@@ -8,13 +8,13 @@ import { motion } from "framer-motion";
 
 export default function About() {
   const [aboutData, setAboutData] = useState({
-    stat1Value: "",
-    stat1Label: "",
-    stat2Value: "",
-    stat2Label: "",
-    aboutText: "",
-    skills: [],
-    software: []
+    stat1Value: "4+ Years",
+    stat1Label: "Design & Tech Experience",
+    stat2Value: "15+",
+    stat2Label: "Projects Completed",
+    aboutText: "I am a BS Information Technology Graduate from the University of Mindanao. I'm a motivated and detail-oriented professional deeply passionate about UI/UX design and front-end development, constantly striving to craft seamless and visually stunning digital experiences.\n\nMy experience spans UI/UX design, front-end development, mobile application development, and digital content creation. As part of Jairosoft's Digital Marketing Team, I contribute to visual design, component libraries, and web user experiences.",
+    skills: ["UI/UX Design", "Front-End Development", "System Architecture", "Design Systems", "Prototyping", "User Research"],
+    software: ["Figma", "React", "Next.js", "JavaScript", "HTML5", "CSS3", "Firebase", "Python"]
   });
 
   useEffect(() => {

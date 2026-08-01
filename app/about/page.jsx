@@ -75,13 +75,23 @@ export default function AboutPage() {
     'nextjs': 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg'
   };
 
+  const DEFAULT_ABOUT_DATA = {
+    aboutPageHeadline: "Designing intuitive products & building modern web applications.",
+    aboutPageSubtitle: "BS Information Technology Graduate from the University of Mindanao.",
+    aboutPageBio: "I am a BS Information Technology Graduate from the University of Mindanao. I'm a motivated and detail-oriented aspiring professional deeply passionate about UI/UX design and front-end development, constantly striving to craft seamless and visually stunning digital experiences.\n\nMy experience spans UI/UX design, front-end development, mobile application development, and digital content creation. I recently joined Jairosoft's Digital Marketing Team, contributing to visual design and branding initiatives.",
+    aboutPageCurrently: "UI/UX Designer & Front-End Developer",
+    aboutPageAvailable: "Open for Full-Time Roles & Freelance Projects"
+  };
+
   useEffect(() => {
     async function fetchData() {
       try {
         const docRef = doc(db, "settings", "general");
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          setData(docSnap.data());
+          setData({ ...DEFAULT_ABOUT_DATA, ...docSnap.data() });
+        } else {
+          setData(DEFAULT_ABOUT_DATA);
         }
 
         const heroSnap = await getDocs(collection(db, "hero_carousel"));
@@ -102,6 +112,7 @@ export default function AboutPage() {
         setCertificates(certs);
       } catch (error) {
         console.error("Error fetching about page data:", error);
+        setData(DEFAULT_ABOUT_DATA);
       }
     }
     fetchData();
