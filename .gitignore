@@ -39,3 +39,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# large media files
+*.mp4
+*.MOV
+*.avi
+
+# cloudflare / wrangler
+.open-next/
+.dev.vars
+wrangler.jsonc
+
