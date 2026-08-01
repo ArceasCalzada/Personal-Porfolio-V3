@@ -8,13 +8,13 @@ import { motion } from "framer-motion";
 
 export default function About() {
   const [aboutData, setAboutData] = useState({
-    stat1Value: "4+ Years",
-    stat1Label: "Design & Tech Experience",
-    stat2Value: "15+",
-    stat2Label: "Projects Completed",
-    aboutText: "I am a BS Information Technology Graduate from the University of Mindanao. I'm a motivated and detail-oriented professional deeply passionate about UI/UX design and front-end development, constantly striving to craft seamless and visually stunning digital experiences.\n\nMy experience spans UI/UX design, front-end development, mobile application development, and digital content creation. As part of Jairosoft's Digital Marketing Team, I contribute to visual design, component libraries, and web user experiences.",
-    skills: ["UI/UX Design", "Front-End Development", "System Architecture", "Design Systems", "Prototyping", "User Research"],
-    software: ["Figma", "React", "Next.js", "JavaScript", "HTML5", "CSS3", "Firebase", "Python"]
+    stat1Value: "",
+    stat1Label: "",
+    stat2Value: "",
+    stat2Label: "",
+    aboutText: "",
+    skills: [],
+    software: []
   });
 
   useEffect(() => {
@@ -24,16 +24,15 @@ export default function About() {
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           const data = docSnap.data();
-          setAboutData((prev) => ({
-            ...prev,
-            stat1Value: data.indexStat1Value || prev.stat1Value,
-            stat1Label: data.indexStat1Label || prev.stat1Label,
-            stat2Value: data.indexStat2Value || prev.stat2Value,
-            stat2Label: data.indexStat2Label || prev.stat2Label,
-            aboutText: data.aboutText || prev.aboutText,
-            skills: data.indexSkills || prev.skills,
-            software: data.indexSoftware || prev.software,
-          }));
+          setAboutData({
+            stat1Value: data.indexStat1Value || "",
+            stat1Label: data.indexStat1Label || "",
+            stat2Value: data.indexStat2Value || "",
+            stat2Label: data.indexStat2Label || "",
+            aboutText: data.aboutText || "",
+            skills: data.indexSkills || [],
+            software: data.indexSoftware || [],
+          });
         }
       } catch (error) {
         console.error("Error fetching about settings:", error);
