@@ -52,7 +52,7 @@ export default function Onboarding() {
     document.body.style.overflow = "hidden";
 
     // 3. Increment progress counter from 0 to 100 smoothly
-    const duration = 2400; // 2.4 seconds total animation duration
+    const duration = 2000; // 2 seconds total animation duration
     const intervalTime = 30; // Update every 30ms
     const totalSteps = duration / intervalTime;
     let currentStep = 0;
@@ -64,21 +64,25 @@ export default function Onboarding() {
 
       if (currentStep >= totalSteps) {
         clearInterval(progressTimer);
-        // Complete loading, lock off overlay in 400ms
         setTimeout(() => {
           setIsVisible(false);
           document.body.style.overflow = "";
           try {
             sessionStorage.setItem("onboarding-seen", "true");
-          } catch (e) {
-            console.warn("sessionStorage setItem failed:", e);
-          }
-        }, 400);
+          } catch (e) {}
+        }, 300);
       }
     }, intervalTime);
 
+    // Fail-safe backup timer: force dismiss after 2.8s no matter what
+    const fallbackTimer = setTimeout(() => {
+      setIsVisible(false);
+      document.body.style.overflow = "";
+    }, 2800);
+
     return () => {
       clearInterval(progressTimer);
+      clearTimeout(fallbackTimer);
       document.body.style.overflow = "";
     };
   }, []);
