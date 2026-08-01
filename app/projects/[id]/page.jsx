@@ -5,13 +5,14 @@ import Footer from "@/components/Footer";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-export default async function ProjectDetails({ params, searchParams }) {
-  // In Next.js 15, params and searchParams are promises.
+export async function generateStaticParams() {
+  return [{ id: "default" }];
+}
+
+export default async function ProjectDetails({ params }) {
   const resolvedParams = await params;
-  const resolvedSearchParams = await searchParams;
-  
-  const projectId = resolvedParams.id;
-  const collectionName = resolvedSearchParams.collection || "projects";
+  const projectId = resolvedParams?.id || "default";
+  const collectionName = "projects";
 
   let project = null;
 
