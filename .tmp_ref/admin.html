@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Arceas John Calzada</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Spline+Sans+Mono:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../src/css/style.css">
+    
+    <!-- Firebase SDKs (Compat version for local file:/// usage) -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js" defer></script>
+    
+    <!-- EasyMDE (Markdown Editor) -->
+    <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+    <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+
+    <!-- Tagify (Tags Input) -->
+    <link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
+
+    <script src="../src/js/admin.js" defer></script>
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+</head>
+
+    <style>
+        /* Firebase Console Style Typography & Reset */
+        @import url('https://fonts.googleapis.com/css2?family=Spline+Sans+Mono:ital,wght@0,300..700;1,300..700&display=swap');
+        
+        body {
+            font-family: 'Spline Sans Mono', monospace;
+            background: #0d0d0f; /* Darker, richer black */
+            color: #e3e3e3;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* EasyMDE Dark Theme Overrides */
+        .editor-toolbar { border-color: #3c4043 !important; background: #1e1e1e !important; color: #e8eaed !important; }
+        .editor-toolbar button { color: #e8eaed !important; }
+        .editor-toolbar button.active, .editor-toolbar button:hover { background: #3c4043 !important; border-color: #5f6368 !important; }
+        .editor-toolbar i.separator { border-left-color: #3c4043 !important; border-right-color: #3c4043 !important; }
+        .CodeMirror { border-color: #3c4043 !important; background: #2a2a2a !important; color: #e8eaed !important; }
+        .CodeMirror-cursor { border-left-color: #e8eaed !important; }
+        .editor-preview { background: #1e1e1e !important; color: #e8eaed !important; }
+
+        /* Tagify Dark Theme Overrides */
+        .tagify {
+            --tags-border-color: #3c4043;
+            --tags-hover-border-color: #5f6368;
+            --tags-focus-border-color: #8ab4f8;
+            --tag-bg: #2a2a2a;
+            --tag-hover: #3c4043;
+            --tag-text-color: #e8eaed;
+            --tag-text-color--edit: #e8eaed;
+            --tag-pad: 0.3rem 0.6rem;
+            --tag-inset-shadow-size: 1.2em;
+            --tag-invalid-color: #ff4a4a;
+            --tag-invalid-bg: rgba(255, 74, 74, 0.5);
+            --tag-remove-bg: rgba(255, 74, 74, 0.3);
+            --tag-remove-btn-color: #e8eaed;
+            --tag-remove-btn-bg: none;
+            --tag-remove-btn-bg--hover: #ff4a4a;
+            background-color: #1e1e1e;
+            color: #e8eaed;
+            border-radius: 8px;
+            padding: 0.3rem;
+            width: 100%;
+        }
+        .tagify__input { color: #e8eaed; }
+        .tagify__tag > div::before {
+            box-shadow: 0 0 0 var(--tag-inset-shadow-size) var(--tag-bg) inset;
+            border-radius: 6px;
+        }
+
+        /* Toast Notification System */
+        #toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .toast {
+            background: rgba(35, 35, 40, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: #e8eaed;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #8ab4f8;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            font-size: 0.95rem;
+            transform: translateX(120%);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .toast.show { transform: translateX(0); }
+        .toast.error { border-left-color: #ff4a4a; }
+        .toast.success { border-left-color: #34a853; }
+
+        /* Utility */
+        .hidden { display: none !important; }
+        .sidebar-dropdown { margin-bottom: 0.5rem; }
+        .sidebar-dropdown-header {
+            display: flex; align-items: center; gap: 1rem;
+            padding: 0.8rem 1.2rem;
+            color: #9aa0a6; font-weight: 500; cursor: pointer;
+            border-radius: 8px; transition: background 0.2s;
+            user-select: none; font-size: 0.95rem;
+        }
+        .sidebar-dropdown-header:hover {
+            background: rgba(255,255,255,0.05); color: #e8eaed;
+        }
+        .dropdown-arrow {
+            margin-left: auto; font-size: 0.7rem; transition: transform 0.2s;
+        }
+        .sidebar-dropdown.active .dropdown-arrow { transform: rotate(180deg); }
+        .sidebar-dropdown.active .sidebar-dropdown-header {
+            color: #e8eaed;
+        }
+        .sidebar-dropdown-content {
+            display: flex; flex-direction: column;
+            padding-left: 2.8rem; margin-top: 0; gap: 0.2rem;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease;
+        }
+        .sidebar-dropdown.active .sidebar-dropdown-content { 
+            max-height: 500px;
+            opacity: 1;
+            margin-top: 0.2rem;
+        }
+        
+        /* Links inside dropdowns */
+        .sidebar-dropdown-content .sidebar-link {
+            padding: 0.6rem 1rem; font-size: 0.9rem;
+            border-radius: 6px; color: #9aa0a6; text-decoration: none;
+            transition: background 0.2s, color 0.2s;
+        }
+        .sidebar-dropdown-content .sidebar-link:hover {
+            background: rgba(255,255,255,0.05); color: #e8eaed;
+        }
+        .sidebar-dropdown-content .sidebar-link.active {
+            color: #8ab4f8; background: rgba(138, 180, 248, 0.1);
+        }
+        
+        /* Login Layout Wrappers */
+        .login-layout { min-height: 100vh; display: flex; flex-direction: column; }
+        .admin-container { max-width: 500px; margin: 0 auto; padding: 150px 5% 50px 5%; width: 100%; }
+        .admin-card {
+            background: linear-gradient(145deg, #1e1e22 0%, #161618 100%);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 12px; padding: 2.5rem;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .admin-card:hover {
+            box-shadow: 0 12px 32px rgba(0,0,0,0.5);
+        }
+        .admin-form-group { margin-bottom: 1.5rem; }
+        .admin-form-group label {
+            display: block; margin-bottom: 0.5rem; color: #9aa0a6;
+            font-size: 0.85rem; font-weight: 500; letter-spacing: 0.5px;
+        }
+        .admin-input {
+            width: 100%; padding: 0.8rem 1rem;
+            background: #202124; border: 1px solid #5f6368;
+            border-radius: 4px; color: #e8eaed;
+            font-family: 'Spline Sans Mono', monospace; font-size: 1rem;
+        }
+        .admin-input:focus {
+            outline: none; border-color: #8ab4f8; background: #202124;
+            box-shadow: inset 0 0 0 1px #8ab4f8;
+        }
+
+        /* App Layout */
+        .app-layout {
+            display: flex; height: 100vh; width: 100vw; overflow: hidden;
+            background: #0d0d0f;
+        }
+        
+        /* Sidebar */
+        .app-sidebar {
+            width: 260px;
+            background: rgba(22, 22, 25, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-right: 1px solid rgba(255,255,255,0.05);
+            display: flex; flex-direction: column;
+            padding: 1.5rem 1rem;
+            z-index: 10;
+            transition: width 0.3s ease, padding 0.3s ease;
+            overflow-x: hidden;
+        }
+        .app-sidebar.desktop-collapsed {
+            width: 0;
+            padding: 0;
+            border-right: none;
+        }
+        .sidebar-brand {
+            font-size: 1.2rem; font-weight: 500; margin-bottom: 2rem;
+            color: #e8eaed; display: flex; align-items: center; gap: 0.8rem;
+            padding: 0 1rem; letter-spacing: 0.5px;
+        }
+        .sidebar-brand span { 
+            color: #ffcb2b; /* Firebase Yellow-Orange */
+        }
+        
+        .sidebar-nav { flex: 1; display: flex; flex-direction: column; gap: 0.2rem; }
+        .sidebar-link.standalone {
+            padding: 0.8rem 1.2rem;
+            border-radius: 8px;
+            color: #9aa0a6;
+            text-decoration: none; font-weight: 500; font-size: 0.95rem;
+            transition: background 0.2s, color 0.2s;
+            display: flex; align-items: center; gap: 1rem;
+        }
+        .sidebar-link.standalone:hover {
+            background: rgba(255,255,255,0.05); color: #e8eaed;
+        }
+        .sidebar-link.standalone.active {
+            color: #8ab4f8; background: rgba(138, 180, 248, 0.1);
+        }
+        
+        /* App Main Content */
+        .app-main {
+            flex: 1; display: flex; flex-direction: column;
+            overflow-y: auto; background: transparent;
+        }
+        .app-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1.5rem 2.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            background: rgba(22, 22, 25, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            position: sticky; top: 0; z-index: 5;
+        }
+        .app-header h1 {
+            font-size: 1.2rem; font-weight: 500; color: #e8eaed; margin: 0;
+        }
+        .app-content { padding: 2.5rem; max-width: 1200px; margin: 0 auto; width: 100%; }
+
+        /* Projects Grid UI */
+        .projects-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem;
+        }
+        .project-card-ui {
+            background: linear-gradient(145deg, #1e1e22 0%, #161618 100%);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 12px; padding: 1.5rem;
+            display: flex; flex-direction: column;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .project-card-ui:hover {
+            border-color: #5f6368;
+        }
+        .project-card-image {
+            width: 100%; height: 160px; object-fit: cover;
+            border-radius: 4px; margin-bottom: 1rem; border: 1px solid #3c4043;
+        }
+        .project-actions-grid { display: flex; gap: 0.5rem; margin-top: 1rem; }
+        .project-actions-grid button {
+            flex: 1; padding: 0.6rem; border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.03); color: #e8eaed;
+            cursor: pointer; font-weight: 500; font-size: 0.85rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+        .project-actions-grid button.edit-btn { color: #8ab4f8; }
+        .project-actions-grid button.edit-btn:hover {
+            background: rgba(138, 180, 248, 0.1); border-color: #8ab4f8;
+            box-shadow: 0 4px 12px rgba(138, 180, 248, 0.2); transform: translateY(-2px);
+        }
+        .project-actions-grid button.delete-btn { color: #f28b82; }
+        .project-actions-grid button.delete-btn:hover {
+            background: rgba(242, 139, 130, 0.1); border-color: #f28b82;
+            box-shadow: 0 4px 12px rgba(242, 139, 130, 0.2); transform: translateY(-2px);
+        }
+
+        /* Drawer Styles */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); z-index: 1000; display: flex; justify-content: flex-end;
+            opacity: 0; pointer-events: none; transition: opacity 0.2s;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-content {
+            background: rgba(22, 22, 25, 0.8);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-left: 1px solid rgba(255,255,255,0.05); padding: 2.5rem;
+            width: 100%; max-width: 450px; height: 100vh; overflow-y: auto;
+            transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -4px 0 24px rgba(0,0,0,0.5);
+        }
+        .modal-overlay.active .modal-content { transform: translateX(0); }
+        .modal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 1rem;
+        }
+        .modal-header h2 { font-size: 1.2rem; font-weight: 500; margin: 0; color: #e8eaed; }
+        .close-modal {
+            background: transparent; border: none; color: #9aa0a6;
+            font-size: 1.2rem; cursor: pointer; padding: 0.5rem;
+            transition: color 0.2s;
+        }
+        .close-modal:hover { color: #e8eaed; }
+        
+        /* Centered Modal (for Messages) */
+        .center-modal {
+            justify-content: center; align-items: center;
+        }
+        .center-modal .modal-content {
+            height: auto; max-height: 80vh; max-width: 500px;
+            border-radius: 16px; border-left: none; border: 1px solid rgba(255,255,255,0.05);
+            transform: scale(0.95); opacity: 0; transition: all 0.2s;
+        }
+        .modal-overlay.active.center-modal .modal-content {
+            transform: scale(1); opacity: 1;
+        }
+        /* Dashboard Home Analytics Overview Responsive */
+        .home-overview-grid {
+            display: flex; gap: 2rem; margin-bottom: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .app-sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                height: 100vh;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                z-index: 1001; /* Above overlay */
+            }
+            .app-sidebar.active {
+                transform: translateX(0);
+            }
+            .sidebar-overlay {
+                position: fixed;
+                top: 0; left: 0; right: 0; bottom: 0;
+                background: rgba(0,0,0,0.5);
+                backdrop-filter: blur(4px);
+                z-index: 1000;
+                display: none;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+            .sidebar-overlay.active {
+                display: block;
+                opacity: 1;
+            }
+            .mobile-menu-btn {
+                display: flex;
+            }
+            .app-content {
+                padding: 1rem;
+            }
+            .admin-card {
+                padding: 1.5rem;
+            }
+            .app-header {
+                padding: 1rem 1.5rem;
+            }
+            .app-header h1 {
+                font-size: 1.5rem !important;
+            }
+            .home-overview-grid {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+        
+        .mobile-menu-btn {
+            display: flex; 
+            background: none;
+            border: none;
+            color: #e8eaed;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+        }
+        @media (min-width: 769px) {
+            /* Kept visible for desktop collapse feature */
+        }
+
+    </style>
+</head>
+<body class="dark-mode">
+    <div class="noise-overlay"></div>
+    <div class="page-grid-bg"></div>
+
+    <!-- ==================== LOGIN LAYOUT (Shown when logged out) ==================== -->
+    <div id="loginLayout" class="login-layout">
+        <nav class="navbar">
+            <div class="nav-brand">Admin Portal</div>
+            <div class="nav-links">
+                <a href="../index.html">← Back to Site</a>
+            </div>
+        </nav>
+
+        <main class="admin-container">
+            <div class="admin-card">
+                <h2 style="font-size: 2.5rem; margin-bottom: 0.5rem;">Admin Login</h2>
+                <p style="color: var(--color-text-muted); margin-bottom: 2rem;">Sign in to manage your portfolio content.</p>
+                
+                <form id="loginForm">
+                    <div class="admin-form-group">
+                        <label for="adminEmail">Email</label>
+                        <input type="email" id="adminEmail" class="admin-input" required>
+                    </div>
+                    <div class="admin-form-group">
+                        <label for="adminPassword">Password</label>
+                        <input type="password" id="adminPassword" class="admin-input" required>
+                    </div>
+                    <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                        <button type="submit" id="signInBtn" class="btn btn-primary" style="flex: 1;">Sign In</button>
+                        <!-- Optional: hide signup button in production -->
+                        <button type="button" id="signUpBtn" class="btn btn-secondary" style="flex: 1;">Create Account</button>
+                    </div>
+                    <!-- Inline error removed, using modal instead -->
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- ==================== APP LAYOUT (Shown when logged in) ==================== -->
+    <div id="appLayout" class="app-layout hidden">
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+        <!-- Sidebar -->
+        <aside class="app-sidebar" id="appSidebar">
+            <div class="sidebar-brand">
+                🎨 <span>CMS</span> Portal
+            </div>
+            <nav class="sidebar-nav" id="adminSidebarNav">
+                <a href="#" class="sidebar-link standalone active" data-target="section-home" style="margin-bottom: 1rem;">
+                    🏠 Dashboard Home
+                </a>
+
+                <div class="sidebar-dropdown">
+                    <div class="sidebar-dropdown-header">
+                        📁 Portfolios <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <div class="sidebar-dropdown-content">
+                        <a href="#" class="sidebar-link" data-target="section-projects">Projects</a>
+                        <a href="#" class="sidebar-link" data-target="section-designs">Designs</a>
+                        <a href="#" class="sidebar-link" data-target="section-certificates">Certificates</a>
+                    </div>
+                </div>
+
+                <div class="sidebar-dropdown">
+                    <div class="sidebar-dropdown-header">
+                        🖼️ Carousels <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <div class="sidebar-dropdown-content">
+                        <a href="#" class="sidebar-link" data-target="section-hero-carousel">Global Carousel</a>
+                    </div>
+                </div>
+
+                <div class="sidebar-dropdown">
+                    <div class="sidebar-dropdown-header">
+                        ⚙️ Settings <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <div class="sidebar-dropdown-content">
+                        <a href="#" class="sidebar-link" data-target="section-hero">Hero Settings</a>
+                        <a href="#" class="sidebar-link" data-target="section-about">Index About Settings</a>
+                        <a href="#" class="sidebar-link" data-target="section-about-page">About Page Settings</a>
+                        <a href="#" class="sidebar-link" data-target="section-cv">CV Settings</a>
+                        <a href="#" class="sidebar-link" data-target="section-footer">Footer Settings</a>
+                    </div>
+                </div>
+
+                <a href="#" class="sidebar-link standalone" data-target="section-inbox" style="margin-top: 0.5rem;">
+                    📬 Inbox
+                </a>
+                
+                <a href="#" class="sidebar-link standalone" data-target="section-analytics" style="margin-top: 0.5rem;">
+                    📊 Analytics
+                </a>
+                
+                <div style="margin-top: auto; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.05);">
+                    <a href="../index.html" class="sidebar-link standalone" target="_blank" style="margin-bottom: 0.5rem;">🌐 View Live Site</a>
+                    <a href="#" id="logoutBtn" class="sidebar-link standalone" style="color: #ff4a4a;">🚪 Logout</a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="app-main">
+            <!-- Header -->
+            <header class="app-header">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <button id="mobileMenuBtn" class="mobile-menu-btn" aria-label="Toggle Menu">
+                        ☰
+                    </button>
+                    <h1 id="appHeaderTitle" style="font-size: 2rem; margin:0;">Dashboard Home</h1>
+                </div>
+                <button id="headerActionBtn" class="btn btn-primary" style="padding: 0.6rem 1.6rem; border-radius: 50px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); display: none;">+ Add Project</button>
+            </header>
+
+            <div class="app-content">
+                <!-- Dashboard Home Section -->
+                <div id="section-home" class="content-section active">
+                    <div class="admin-card" style="max-width: 1000px; margin: 0 auto;">
+                        <h2 style="margin-bottom: 0.5rem; color: #e8eaed;">Welcome back, Admin! 👋</h2>
+                        <p style="color: #9aa0a6; margin-bottom: 2rem;">Here is a quick overview of what's happening with your portfolio today.</p>
+                        
+                        <div class="home-overview-grid">
+                            <div style="flex: 1; background: rgba(30,30,35,0.4); padding: 2rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+                                <h3 style="color: #9aa0a6; font-size: 1.1rem; margin-bottom: 0.5rem;">Quick Analytics</h3>
+                                <p style="font-size: 0.9rem; color: #9aa0a6; margin-bottom: 1rem;">Total Views this month</p>
+                                <div id="homeTotalViews" style="font-size: 2.5rem; font-weight: bold; color: #8ab4f8; margin-bottom: 1rem;">0</div>
+                                <button class="btn btn-primary" onclick="document.querySelector('[data-target=\'section-analytics\']').click()" style="padding: 0.5rem 1rem;">View Full Analytics</button>
+                            </div>
+                            
+                            <div style="flex: 1; background: rgba(30,30,35,0.4); padding: 2rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+                                <h3 style="color: #9aa0a6; font-size: 1.1rem; margin-bottom: 0.5rem;">Recent Messages</h3>
+                                <p style="font-size: 0.9rem; color: #9aa0a6; margin-bottom: 1rem;">Check your unread inbox</p>
+                                <div id="homeUnreadMessages" style="font-size: 2.5rem; font-weight: bold; color: #ffcb2b; margin-bottom: 1rem;">0</div>
+                                <button class="btn btn-primary" onclick="document.querySelector('[data-target=\'section-inbox\']').click()" style="padding: 0.5rem 1rem; background: #2a2a2a; border-color: #3c4043; color: #e8eaed;">Open Inbox</button>
+                            </div>
+                        </div>
+
+                        <div style="background: rgba(30,30,35,0.4); padding: 2rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+                            <h3 style="color: #9aa0a6; font-size: 1.1rem; margin-bottom: 1rem;">Quick Actions</h3>
+                            <div style="display: flex; gap: 1rem;">
+                                <button class="btn btn-primary" onclick="document.querySelector('[data-target=\'section-projects\']').click()" style="flex:1;">Manage Projects</button>
+                                <button class="btn btn-primary" onclick="document.querySelector('[data-target=\'section-hero\']').click()" style="flex:1; background: #2a2a2a; border-color: #3c4043; color: #e8eaed;">Edit Hero Title</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics Section -->
+                <div id="section-analytics" class="content-section hidden">
+                    <div class="admin-card" style="max-width: 1000px; margin: 0 auto 2rem auto;">
+                        <h2 style="margin-bottom: 1.5rem;">Site Overview</h2>
+                        <div style="display: flex; gap: 2rem; margin-bottom: 2rem;">
+                            <div style="flex: 1; background: #2a2a2a; padding: 2rem; border-radius: 12px; text-align: center; border: 1px solid #3c4043;">
+                                <h3 style="color: #9aa0a6; font-size: 1.1rem; margin-bottom: 0.5rem;">Total Views</h3>
+                                <div id="analyticsTotalViews" style="font-size: 3rem; font-weight: bold; color: #8ab4f8;">0</div>
+                            </div>
+                            <div style="flex: 1; background: #2a2a2a; padding: 2rem; border-radius: 12px; text-align: center; border: 1px solid #3c4043;">
+                                <h3 style="color: #9aa0a6; font-size: 1.1rem; margin-bottom: 0.5rem;">Unique Visitors</h3>
+                                <div id="analyticsUniqueVisitors" style="font-size: 3rem; font-weight: bold; color: #8ab4f8;">0</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 2rem;">
+                            <div style="flex: 1; background: #2a2a2a; padding: 1.5rem; border-radius: 12px; border: 1px solid #3c4043;">
+                                <h3 style="color: #e8eaed; font-size: 1.1rem; margin-bottom: 1rem;">Top Traffic Sources</h3>
+                                <div id="analyticsSourcesList" style="color: #9aa0a6;">Loading...</div>
+                            </div>
+                            <div style="flex: 1; background: #2a2a2a; padding: 1.5rem; border-radius: 12px; border: 1px solid #3c4043;">
+                                <h3 style="color: #e8eaed; font-size: 1.1rem; margin-bottom: 1rem;">Top Devices</h3>
+                                <div id="analyticsDevicesList" style="color: #9aa0a6;">Loading...</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="admin-card" style="max-width: 1000px; margin: 0 auto;">
+                        <h2 style="margin-bottom: 1.5rem;">Recent Visitors</h2>
+                        <div style="overflow-x: auto; background: #202124; border-radius: 8px; border: 1px solid #3c4043;">
+                            <table style="width: 100%; text-align: left; border-collapse: collapse; min-width: 600px;">
+                                <thead>
+                                    <tr style="border-bottom: 1px solid #3c4043; background: #2a2a2a;">
+                                        <th style="padding: 1rem; color: #9aa0a6; font-weight: 500;">Time</th>
+                                        <th style="padding: 1rem; color: #9aa0a6; font-weight: 500;">Location</th>
+                                        <th style="padding: 1rem; color: #9aa0a6; font-weight: 500;">Page</th>
+                                        <th style="padding: 1rem; color: #9aa0a6; font-weight: 500;">Source</th>
+                                        <th style="padding: 1rem; color: #9aa0a6; font-weight: 500;">System</th>
+                                        <th style="padding: 1rem; color: #9aa0a6; font-weight: 500;">IP Address</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="analyticsVisitorsTable">
+                                    <tr><td colspan="6" style="padding: 1.5rem; text-align: center; color: var(--color-text-muted);">Loading visitors...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Projects Section -->
+                <div id="section-projects" class="content-section hidden">
+                    <div id="projectsList" class="projects-grid">
+                        <p style="color: var(--color-text-muted); grid-column: 1 / -1;">Loading projects...</p>
+                    </div>
+                </div>
+
+                <!-- Designs Section -->
+                <div id="section-designs" class="content-section hidden">
+                    <div id="designsList" class="projects-grid">
+                        <p style="color: var(--color-text-muted); grid-column: 1 / -1;">Loading designs...</p>
+                    </div>
+                </div>
+
+                <!-- Certificates Section -->
+                <div id="section-certificates" class="content-section hidden">
+                    <div id="certificatesList" class="projects-grid">
+                        <p style="color: var(--color-text-muted); grid-column: 1 / -1;">Loading certificates...</p>
+                    </div>
+                </div>
+
+                <!-- Global Carousel Section -->
+                <div id="section-hero-carousel" class="content-section hidden">
+                    <div id="heroCarouselList" class="projects-grid">
+                        <p style="color: var(--color-text-muted); grid-column: 1 / -1;">Loading images...</p>
+                    </div>
+                </div>
+
+                <!-- Hero Settings Section -->
+                <div id="section-hero" class="content-section hidden">
+                    <div class="admin-card" style="max-width: 800px; margin: 0 auto;">
+                        <h2 style="margin-bottom: 2rem;">Hero Settings</h2>
+                        <form id="heroForm">
+                            <div class="admin-form-group">
+                                <label>Hero Title</label>
+                                <input type="text" id="setHeroTitle" class="admin-input" placeholder="Hi, I'm Arceas">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Hero Subtitle 1</label>
+                                <textarea id="setHeroSub1" class="admin-input" rows="2"></textarea>
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Hero Subtitle 2</label>
+                                <textarea id="setHeroSub2" class="admin-input" rows="2"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="margin-top: 1rem; padding: 1rem 2rem; border-radius: 12px;">Save Hero Settings</button>
+                            <p id="heroStatus" style="color: var(--color-orange); margin-top: 1rem; display: none;">Saved successfully!</p>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- CV Settings Section -->
+                <div id="section-cv" class="content-section hidden">
+                    <div class="admin-card" style="max-width: 800px; margin: 0 auto;">
+                        <h2 style="margin-bottom: 2rem;">CV Settings</h2>
+                        
+                        <div style="background: rgba(2, 132, 199, 0.1); border-left: 4px solid #0ea5e9; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+                            <h3 style="margin-bottom: 0.5rem; font-size: 1.1rem; color: #0284c7;">How to use Google Drive for your CV</h3>
+                            <ol style="margin-left: 1.5rem; color: var(--color-text-light); font-size: 0.95rem; line-height: 1.6;">
+                                <li>Upload your PDF CV to your Google Drive.</li>
+                                <li>Right-click the file and select <strong>Share</strong>.</li>
+                                <li>Under General Access, change "Restricted" to <strong>"Anyone with the link"</strong>.</li>
+                                <li>Click <strong>Copy link</strong>.</li>
+                                <li>Paste that link in the box below and click Save.</li>
+                            </ol>
+                            <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--color-text-muted);">Alternatively, if you uploaded a file directly to your website folder, you can just type the filename (e.g., <code>CV_ArceasJohnCalzada.pdf</code>).</p>
+                        </div>
+
+                        <form id="cvForm">
+                            <div class="admin-form-group">
+                                <label>CV Document Link (URL or Filename)</label>
+                                <input type="text" id="setCvLink" class="admin-input" placeholder="https://drive.google.com/file/d/.../view?usp=sharing">
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="margin-top: 1rem; padding: 1rem 2rem; border-radius: 12px;">Save CV Settings</button>
+                            <p id="cvStatus" style="color: var(--color-orange); margin-top: 1rem; display: none;">Saved successfully!</p>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- About Settings Section -->
+                <div id="section-about" class="content-section hidden">
+                    <div class="admin-card" style="max-width: 800px; margin: 0 auto;">
+                        <h2 style="margin-bottom: 2rem;">Index About Settings</h2>
+                        <form id="aboutForm">
+                            <div class="admin-form-group">
+                                <label>Stat 1 Value (e.g. 4+)</label>
+                                <input type="text" id="setIndexStat1Value" class="admin-input" placeholder="4+">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Stat 1 Label</label>
+                                <input type="text" id="setIndexStat1Label" class="admin-input" placeholder="Years studying & practicing IT">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Stat 2 Value (e.g. 10+)</label>
+                                <input type="text" id="setIndexStat2Value" class="admin-input" placeholder="10+">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Stat 2 Label</label>
+                                <input type="text" id="setIndexStat2Label" class="admin-input" placeholder="Academic & Personal Projects">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>What I Do Text</label>
+                                <textarea id="setAboutText" class="admin-input" rows="6"></textarea>
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Skills (comma separated, e.g. UI/UX Design, Front-End Development)</label>
+                                <input type="text" id="setIndexSkills" class="admin-input" placeholder="UI/UX Design, Front-End Development">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Software & Tech Stack (comma separated, e.g. Figma, HTML5, React)</label>
+                                <input type="text" id="setIndexSoftware" class="admin-input" placeholder="Figma, HTML5, React">
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="margin-top: 1rem; padding: 1rem 2rem; border-radius: 12px;">Save Index About Settings</button>
+                            <p id="aboutStatus" style="color: var(--color-orange); margin-top: 1rem; display: none;">Saved successfully!</p>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- About Page Settings Section -->
+                <div id="section-about-page" class="content-section hidden">
+                    <div class="admin-card" style="max-width: 800px; margin: 0 auto;">
+                        <h2 style="margin-bottom: 2rem;">About Page Settings</h2>
+                        <form id="aboutPageForm">
+                            <div class="admin-form-group">
+                                <label>Headline (e.g. Hi – nice to see you here, I'm AJ 😊)</label>
+                                <input type="text" id="setAboutPageHeadline" class="admin-input">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Subtitle (e.g. UI/UX Intern @Jairosoft · Front-End Development)</label>
+                                <input type="text" id="setAboutPageSubtitle" class="admin-input">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Bio Text</label>
+                                <textarea id="setAboutPageBio" class="admin-input" rows="5"></textarea>
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Currently Status (e.g. BS Information Technology at UM)</label>
+                                <input type="text" id="setAboutPageCurrently" class="admin-input">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Available Status (e.g. UI/UX Designer Intern)</label>
+                                <input type="text" id="setAboutPageAvailable" class="admin-input">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Skills - Design & Creative (comma separated)</label>
+                                <input type="text" id="setAboutPageSkillsDesign" class="admin-input" placeholder="Figma, Canva, Photoshop">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Skills - Development (comma separated)</label>
+                                <input type="text" id="setAboutPageSkillsDev" class="admin-input" placeholder="HTML/CSS, JavaScript, React">
+                            </div>
+                            
+                            <h3 style="margin-top: 2rem; margin-bottom: 1rem; border-bottom: 1px solid #3c4043; padding-bottom: 0.5rem;">Experience</h3>
+                            <div id="experienceListContainer" style="margin-bottom: 1rem;"></div>
+                            <button type="button" class="btn btn-secondary" onclick="addExperienceRow()" style="margin-bottom: 2rem;">+ Add Experience</button>
+
+                            <h3 style="margin-top: 1rem; margin-bottom: 1rem; border-bottom: 1px solid #3c4043; padding-bottom: 0.5rem;">Education</h3>
+                            <div id="educationListContainer" style="margin-bottom: 1rem;"></div>
+                            <button type="button" class="btn btn-secondary" onclick="addEducationRow()">+ Add Education</button>
+
+                            <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #3c4043;">
+                                <button type="submit" class="btn btn-primary" style="padding: 1rem 2rem; border-radius: 12px; width: 100%;">Save About Page Settings</button>
+                                <p id="aboutPageStatus" style="color: var(--color-orange); margin-top: 1rem; display: none;">Saved successfully!</p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+
+                <!-- Footer Settings Section -->
+                <div id="section-footer" class="content-section hidden">
+                    <div class="admin-card" style="max-width: 800px; margin: 0 auto;">
+                        <h2 style="margin-bottom: 2rem;">Footer Settings</h2>
+                        <form id="footerForm">
+                            <div class="admin-form-group">
+                                <label>Footer Headline (use &lt;span&gt; for highlighted text)</label>
+                                <input type="text" id="setFooterHeadline" class="admin-input" placeholder="Let's create something <span>extraordinary.</span>">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Footer Subtext</label>
+                                <input type="text" id="setFooterSubtext" class="admin-input" placeholder="Open for opportunities...">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Email Address</label>
+                                <input type="email" id="setFooterEmail" class="admin-input" placeholder="contact@example.com">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Footer Copyright Text</label>
+                                <textarea id="setFooterCopyright" class="admin-input" rows="3" placeholder="&copy; 2026 ARCEAS JOHN CALZADA. ALL RIGHTS RESERVED..."></textarea>
+                            </div>
+                            <div class="admin-form-group">
+                                <label style="display: flex; align-items: center; justify-content: space-between;">
+                                    LinkedIn URL
+                                    <label style="font-size: 0.8rem; font-weight: normal; margin: 0; display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                        <input type="checkbox" id="showFooterLinkedIn" checked> Show
+                                    </label>
+                                </label>
+                                <input type="text" id="setFooterLinkedIn" class="admin-input" placeholder="https://linkedin.com/...">
+                            </div>
+                            <div class="admin-form-group">
+                                <label style="display: flex; align-items: center; justify-content: space-between;">
+                                    Behance URL
+                                    <label style="font-size: 0.8rem; font-weight: normal; margin: 0; display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                        <input type="checkbox" id="showFooterBehance" checked> Show
+                                    </label>
+                                </label>
+                                <input type="text" id="setFooterBehance" class="admin-input" placeholder="https://behance.net/...">
+                            </div>
+                            <div class="admin-form-group">
+                                <label style="display: flex; align-items: center; justify-content: space-between;">
+                                    Dribbble URL
+                                    <label style="font-size: 0.8rem; font-weight: normal; margin: 0; display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                        <input type="checkbox" id="showFooterDribbble" checked> Show
+                                    </label>
+                                </label>
+                                <input type="text" id="setFooterDribbble" class="admin-input" placeholder="https://dribbble.com/...">
+                            </div>
+                            <div class="admin-form-group">
+                                <label style="display: flex; align-items: center; justify-content: space-between;">
+                                    Twitter/X URL
+                                    <label style="font-size: 0.8rem; font-weight: normal; margin: 0; display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                        <input type="checkbox" id="showFooterTwitter" checked> Show
+                                    </label>
+                                </label>
+                                <input type="text" id="setFooterTwitter" class="admin-input" placeholder="https://twitter.com/...">
+                            </div>
+                            <div class="admin-form-group">
+                                <label style="display: flex; align-items: center; justify-content: space-between;">
+                                    Instagram URL
+                                    <label style="font-size: 0.8rem; font-weight: normal; margin: 0; display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                        <input type="checkbox" id="showFooterInstagram" checked> Show
+                                    </label>
+                                </label>
+                                <input type="text" id="setFooterInstagram" class="admin-input" placeholder="https://instagram.com/...">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Phone Number</label>
+                                <input type="text" id="setFooterPhone" class="admin-input" placeholder="+1 (234) 567-890">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Location</label>
+                                <input type="text" id="setFooterLocation" class="admin-input" placeholder="San Francisco, CA">
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="margin-top: 1rem; padding: 1rem 2rem; border-radius: 12px;">Save Footer Settings</button>
+                            <p id="footerStatus" style="color: var(--color-orange); margin-top: 1rem; display: none;">Saved successfully!</p>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Inbox Section -->
+                <div id="section-inbox" class="content-section hidden">
+                    <div class="admin-card" style="max-width: 800px; margin: 0 auto; padding: 2rem;">
+                        <div id="inboxList" style="display: flex; flex-direction: column; gap: 1rem;">
+                            <p style="color: var(--color-text-muted);">Loading messages...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ==================== PROJECT MODAL ==================== -->
+    <div id="projectModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 id="modalTitle" style="margin-bottom: 1.5rem; font-size: 1.8rem;">Add Project</h2>
+            <form id="projectForm">
+                <input type="hidden" id="projectId">
+                
+                <div class="admin-form-group">
+                    <label for="projTitle">Title</label>
+                    <input type="text" id="projTitle" class="admin-input" required placeholder="e.g. KinderConnect">
+                </div>
+                
+                <div class="admin-form-group">
+                    <label for="projSubtitle">Subtitle / Tech Stack</label>
+                    <input type="text" id="projSubtitle" class="admin-input" required placeholder="e.g. School Management System • C#">
+                </div>
+                
+                <div class="admin-form-group">
+                    <label id="lblProjDesc" for="projDesc">Description / Skills</label>
+                    <textarea id="projDesc" class="admin-input" rows="3" required placeholder="Brief description..."></textarea>
+                </div>
+
+                <!-- Certificate Only Fields -->
+                <div id="certOnlyFields" style="display: none;">
+                    <div class="admin-form-group">
+                        <label for="certDate">Issued Date</label>
+                        <input type="text" id="certDate" class="admin-input" placeholder="e.g. Feb 2024">
+                    </div>
+                    <div class="admin-form-group">
+                        <label for="certCredentialId">Credential ID</label>
+                        <input type="text" id="certCredentialId" class="admin-input" placeholder="e.g. 3c03c349-b8fe...">
+                    </div>
+                </div>
+
+                <div class="admin-form-group">
+                    <label>Main Cover Image Upload / Path</label>
+                    
+                    <!-- Drag and Drop Zone -->
+                    <div id="imageDropZone" style="border: 2px dashed #3c4043; border-radius: 8px; padding: 2rem; text-align: center; margin-bottom: 1rem; transition: background 0.2s; cursor: pointer;">
+                        <p style="margin: 0; color: #9aa0a6; font-size: 0.95rem;">Drag & drop an image here, or click to select</p>
+                        <input type="file" id="imageFileInput" accept="image/*" style="display: none;">
+                    </div>
+                    
+                    <input type="text" id="projImage" class="admin-input" required placeholder="Or paste image URL / Base64 here">
+                    
+                    <div style="margin-top: 1rem; text-align: center;">
+                        <img id="projImagePreview" src="" alt="Image Preview" style="width: 100%; max-height: 200px; object-fit: contain; border-radius: 8px; display: none; background: rgba(255,255,255,0.05); border: 1px dashed #3c4043; padding: 5px;">
+                    </div>
+                </div>
+
+                <div id="designOnlyFields" style="display: none; padding: 1.5rem; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px solid #3c4043; margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 1rem;">Additional Gallery Images (Optional)</label>
+                    <div id="galleryDropZone" style="border: 2px dashed #3c4043; border-radius: 8px; padding: 1.5rem; text-align: center; margin-bottom: 1rem; cursor: pointer; transition: background 0.2s;">
+                        <p style="margin: 0; color: #9aa0a6; font-size: 0.95rem;">Drag & drop images here to add to gallery, or click to upload</p>
+                        <input type="file" id="galleryFileInput" accept="image/*" multiple style="display: none;">
+                    </div>
+                    <div id="galleryContainer" style="display: flex; flex-direction: column; gap: 1rem;">
+                        <!-- Gallery items will be added here -->
+                    </div>
+                    <button type="button" id="addGalleryImgBtn" class="btn btn-secondary" style="margin-top: 1rem; width: 100%; padding: 0.6rem; border: 1px dashed #5f6368; background: transparent;">+ Add Empty URL Field</button>
+                </div>
+
+                <div class="admin-form-group">
+                    <label for="projAspect">Image Aspect Ratio</label>
+                    <select id="projAspect" class="admin-input" required>
+                        <option value="3/4">Tall (3/4)</option>
+                        <option value="1/1">Square (1/1)</option>
+                        <option value="4/3">Wide (4/3)</option>
+                        <option value="16/9">Ultra Wide (16/9)</option>
+                        <option value="210/297">A4 Size (Portrait)</option>
+                        <option value="297/210">A4 Size (Landscape)</option>
+                    </select>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="button" id="cancelModalBtn" class="btn btn-secondary" style="flex: 1; border-radius: 12px;">Cancel</button>
+                    <button type="submit" id="saveProjectBtn" class="btn btn-primary" style="flex: 1; border-radius: 12px;">Save Project</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== IMAGE MODAL (For Carousels) ==================== -->
+    <div id="imageModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 id="imageModalTitle" style="margin-bottom: 1.5rem; font-size: 1.8rem;">Add Image</h2>
+            <form id="imageForm">
+                <input type="hidden" id="imageId">
+                <div class="admin-form-group">
+                    <label>Image Upload / Path</label>
+                    
+                    <div id="carouselDropZone" style="border: 2px dashed #3c4043; border-radius: 8px; padding: 2rem; text-align: center; margin-bottom: 1rem; transition: background 0.2s; cursor: pointer;">
+                        <p style="margin: 0; color: #9aa0a6; font-size: 0.95rem;">Drag & drop an image here, or click to select</p>
+                        <input type="file" id="carouselFileInput" accept="image/*" style="display: none;">
+                    </div>
+
+                    <input type="text" id="imgUrl" class="admin-input" required placeholder="Or paste image URL / Base64 here">
+                    
+                    <div style="margin-top: 1rem; text-align: center;">
+                        <img id="carouselImagePreview" src="" alt="Image Preview" style="width: 100%; max-height: 200px; object-fit: contain; border-radius: 8px; display: none; background: rgba(255,255,255,0.05); border: 1px dashed #3c4043; padding: 5px;">
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="button" id="cancelImageModalBtn" class="btn btn-secondary" style="flex: 1; border-radius: 12px;">Cancel</button>
+                    <button type="submit" id="saveImageBtn" class="btn btn-primary" style="flex: 1; border-radius: 12px;">Save Image</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== MESSAGE MODAL ==================== -->
+    <div id="messageModal" class="modal-overlay center-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Message Details</h2>
+                <button type="button" id="closeMessageModal" class="close-modal">✕</button>
+            </div>
+            <div style="margin-bottom: 1rem;">
+                <label style="color: #9aa0a6; font-size: 0.85rem;">From</label>
+                <p id="msgModalName" style="margin: 0; font-size: 1.1rem; color: #e8eaed;"></p>
+                <a id="msgModalEmail" href="#" style="color: #8ab4f8; text-decoration: none; font-size: 0.9rem;"></a>
+            </div>
+            <div style="margin-bottom: 1.5rem;">
+                <label style="color: #9aa0a6; font-size: 0.85rem;">Date Received</label>
+                <p id="msgModalDate" style="margin: 0; font-size: 0.9rem; color: #e8eaed;"></p>
+            </div>
+            <div style="margin-bottom: 2rem; background: #121212; padding: 1rem; border-radius: 4px; border: 1px solid #3c4043;">
+                <p id="msgModalContent" style="margin: 0; color: #e8eaed; line-height: 1.5; white-space: pre-wrap; font-size: 0.95rem;"></p>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                <button type="button" id="replyMessageBtn" class="btn btn-primary" style="flex: 1;">Reply via Email</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== CONFIRM DELETE MODAL ==================== -->
+    <div id="confirmModal" class="modal-overlay center-modal">
+        <div class="modal-content" style="max-width: 400px; padding: 2rem;">
+            <div style="text-align: center; margin-bottom: 1.5rem;">
+                <div style="font-size: 3rem; color: #f28b82; margin-bottom: 1rem;">⚠️</div>
+                <h2 style="margin: 0 0 0.5rem 0; color: #e8eaed; font-size: 1.3rem;">Confirm Deletion</h2>
+                <p id="confirmModalMessage" style="color: #9aa0a6; margin: 0; font-size: 0.95rem;">Are you sure you want to delete this item?</p>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                <button type="button" id="cancelConfirmBtn" class="btn btn-secondary" style="flex: 1; border-radius: 8px;">Cancel</button>
+                <button type="button" id="executeConfirmBtn" class="btn btn-primary" style="flex: 1; border-radius: 8px; background: #f28b82; color: #000; border: none;">Delete</button>
+            </div>
+        </div>
+    </div>
+    <!-- ==================== LOADING MODAL ==================== -->
+    <div id="loadingModal" class="modal-overlay center-modal" style="z-index: 9999;">
+        <div class="modal-content" style="max-width: 300px; padding: 2rem; text-align: center;">
+            <div class="loader-spinner" style="margin: 0 auto 1.5rem auto; border: 4px solid #3c4043; border-top: 4px solid var(--color-orange); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite;"></div>
+            <h2 id="loadingModalMessage" style="margin: 0; color: #e8eaed; font-size: 1.1rem; font-weight: 500;">Saving...</h2>
+            <style>
+                @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+            </style>
+        </div>
+    </div>
+    <!-- ==================== ERROR MODAL ==================== -->
+    <div id="errorModal" class="modal-overlay center-modal">
+        <div class="modal-content" style="max-width: 400px; padding: 2rem;">
+            <div style="text-align: center; margin-bottom: 1.5rem;">
+                <div style="font-size: 3rem; color: #ff4a4a; margin-bottom: 1rem;">❌</div>
+                <h2 style="margin: 0 0 0.5rem 0; color: #e8eaed; font-size: 1.3rem;">Authentication Error</h2>
+                <p id="errorModalMessage" style="color: #9aa0a6; margin: 0; font-size: 0.95rem;">An error occurred.</p>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                <button type="button" id="closeErrorModalBtn" class="btn btn-secondary" style="flex: 1; border-radius: 8px;">Close</button>
+            </div>
+        </div>
+    </div>
+    <!-- Toast Notification Container -->
+    <div id="toast-container"></div>
+</body>
+</html>
