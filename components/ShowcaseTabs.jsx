@@ -99,10 +99,21 @@ export default function ShowcaseTabs() {
           }
         } else {
           linkContent = (
-            <div onClick={() => setActiveProjectModal(item)} className="stagger-img-link" style={{ aspectRatio: item.aspectRatio || "1/1", cursor: "pointer" }}>
+            <Link 
+              href={`/projects?id=${item.id}`} 
+              onClick={(e) => {
+                // If simple click, open modal directly without full page reload
+                if (!e.ctrlKey && !e.metaKey && !e.shiftKey) {
+                  e.preventDefault();
+                  setActiveProjectModal(item);
+                }
+              }} 
+              className="stagger-img-link" 
+              style={{ aspectRatio: item.aspectRatio || "1/1", cursor: "pointer" }}
+            >
               <img src={imgSrc} alt={item.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               <div className="hover-overlay"><span>View Project ↗</span></div>
-            </div>
+            </Link>
           );
         }
 
@@ -111,7 +122,24 @@ export default function ShowcaseTabs() {
             <div style={{ borderRadius: "8px", overflow: "hidden", boxShadow: "0 20px 40px rgba(0,0,0,0.3)", border: "1px solid var(--glass-border)", marginBottom: "2rem" }}>
               {linkContent}
             </div>
-            <h3 style={{ cursor: type === "projects" ? "pointer" : "default" }} onClick={() => type === "projects" && setActiveProjectModal(item)}>{item.title}</h3>
+            <h3 style={{ cursor: type === "projects" ? "pointer" : "default" }}>
+              {type === "projects" ? (
+                <Link 
+                  href={`/projects?id=${item.id}`} 
+                  onClick={(e) => {
+                    if (!e.ctrlKey && !e.metaKey && !e.shiftKey) {
+                      e.preventDefault();
+                      setActiveProjectModal(item);
+                    }
+                  }} 
+                  style={{ color: "inherit", textDecoration: "none" }}
+                >
+                  {item.title}
+                </Link>
+              ) : (
+                item.title
+              )}
+            </h3>
             <p className="subtitle">{item.subtitle}</p>
             <p className="desc">{shortDesc}</p>
           </motion.div>
