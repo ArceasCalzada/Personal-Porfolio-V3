@@ -61,6 +61,8 @@ export default function Navbar() {
     }
   };
 
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   if (!mounted) return null;
 
   return (
@@ -111,7 +113,23 @@ export default function Navbar() {
         >
           {isLightMode ? <Moon size={18} /> : <Sun size={18} />}
         </button>
+        <button
+          className="mobile-menu-toggle"
+          aria-label="Toggle Navigation Menu"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          {isMobileMenuOpen ? "✕" : "☰"}
+        </button>
       </div>
+
+      {isMobileMenuOpen && (
+        <div className="mobile-nav-dropdown">
+          <Link href="/#hero" onClick={() => setIsMobileMenuOpen(false)}>Home</Link>
+          <Link href="/#about" onClick={() => setIsMobileMenuOpen(false)}>About</Link>
+          <Link href="/#showcase" onClick={() => setIsMobileMenuOpen(false)}>Showcase</Link>
+          <Link href="/#contact" onClick={() => setIsMobileMenuOpen(false)}>Contact</Link>
+        </div>
+      )}
     </nav>
   );
 }
