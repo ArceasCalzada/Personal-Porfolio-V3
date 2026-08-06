@@ -65,13 +65,12 @@ export default function Navbar() {
 
   return (
     <nav className={`navbar ${isScrolled ? "scrolled" : ""}`}>
-      <Link href="/" className="nav-brand" style={{ display: "flex", alignItems: "center", gap: "0.5rem", textDecoration: "none" }}>
-        <svg width="22" height="22" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: "block", flexShrink: 0 }}>
+      <Link href="/" className="nav-brand" style={{ display: "flex", alignItems: "center", gap: "0.4rem", textDecoration: "none" }}>
+        <svg width="20" height="20" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: "block", flexShrink: 0 }}>
           <path d="M 140 380 L 256 130 L 372 380" stroke="currentColor" strokeWidth="56" strokeLinecap="round" strokeLinejoin="round" />
           <path d="M 190 280 L 322 280" stroke="currentColor" strokeWidth="56" strokeLinecap="round" />
         </svg>
-        <span className="brand-text-desktop" style={{ textTransform: "none", color: "var(--color-text-light)" }}>Arceas John Calzada</span>
-        <span className="brand-text-mobile" style={{ textTransform: "none", color: "var(--color-text-light)" }}>Arceas</span>
+        <span className="brand-text" style={{ textTransform: "none", color: "var(--color-text-light)" }}>Arceas John Calzada</span>
       </Link>
       <div className="nav-links">
         <div className="nav-indicator"></div>
