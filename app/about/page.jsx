@@ -331,42 +331,6 @@ export default function AboutPage() {
               </div>
             </div>
             
-            <div style={{ height: "1px", background: "var(--glass-border)", width: "100%", margin: "5rem 0" }}></div>
-            
-            <div className="editorial-layout-row">
-              <div className="editorial-layout-left">
-                <h2>About the Build of this Portfolio</h2>
-              </div>
-              <div className="editorial-layout-right">
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "1.5rem" }}>
-                  <div style={{ padding: "1.5rem", background: "rgba(255,255,255,0.03)", borderRadius: "16px", border: "1px solid var(--glass-border)" }}>
-                    <h3 style={{ fontSize: "1.1rem", marginBottom: "0.5rem", color: "var(--color-orange)" }}>⚡ Core Architecture</h3>
-                    <p style={{ fontSize: "0.9rem", color: "var(--color-text-muted)", lineHeight: 1.6, margin: 0 }}>
-                      Built with Next.js 16 (App Router), React, and Firebase Firestore for full-stack data management.
-                    </p>
-                  </div>
-                  <div style={{ padding: "1.5rem", background: "rgba(255,255,255,0.03)", borderRadius: "16px", border: "1px solid var(--glass-border)" }}>
-                    <h3 style={{ fontSize: "1.1rem", marginBottom: "0.5rem", color: "var(--color-orange)" }}>🎨 Design System</h3>
-                    <p style={{ fontSize: "0.9rem", color: "var(--color-text-muted)", lineHeight: 1.6, margin: 0 }}>
-                      Custom Vanilla CSS with dynamic HSL dark/light modes, glassmorphism design, and Framer Motion micro-animations.
-                    </p>
-                  </div>
-                  <div style={{ padding: "1.5rem", background: "rgba(255,255,255,0.03)", borderRadius: "16px", border: "1px solid var(--glass-border)" }}>
-                    <h3 style={{ fontSize: "1.1rem", marginBottom: "0.5rem", color: "var(--color-orange)" }}>⚙️ Custom CMS</h3>
-                    <p style={{ fontSize: "0.9rem", color: "var(--color-text-muted)", lineHeight: 1.6, margin: 0 }}>
-                      Equipped with an Admin Dashboard for managing projects, designs, certificates, and hero carousel content in real-time.
-                    </p>
-                  </div>
-                  <div style={{ padding: "1.5rem", background: "rgba(255,255,255,0.03)", borderRadius: "16px", border: "1px solid var(--glass-border)" }}>
-                    <h3 style={{ fontSize: "1.1rem", marginBottom: "0.5rem", color: "var(--color-orange)" }}>🌐 Cloud Deployment</h3>
-                    <p style={{ fontSize: "0.9rem", color: "var(--color-text-muted)", lineHeight: 1.6, margin: 0 }}>
-                      Deployed via Cloudflare Pages edge hosting with optimized static export for high performance and fast global delivery.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
             <div style={{ marginTop: "6rem", textAlign: "center" }}>
               <Link href="/" className="btn btn-primary" style={{ padding: "1rem 2rem", fontSize: "1.1rem" }}>← Back to Portfolio</Link>
             </div>
