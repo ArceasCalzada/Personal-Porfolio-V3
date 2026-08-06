@@ -114,7 +114,7 @@ export default function Footer() {
                 <li><Link href="/#hero">Home</Link></li>
                 <li><Link href="/#about">About</Link></li>
                 <li><Link href="/#showcase">Showcase</Link></li>
-                <li><a href={footerData.cvLink} target="_blank" rel="noopener noreferrer" className="dynCVLink">Resume</a></li>
+                <li><a href={footerData.cvLink} target="_blank" rel="noopener noreferrer" className="dynCVLink">CV</a></li>
               </ul>
             </div>
             
