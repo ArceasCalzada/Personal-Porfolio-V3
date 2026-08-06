@@ -78,7 +78,7 @@ export default function AboutPage() {
   const DEFAULT_ABOUT_DATA = {
     aboutPageHeadline: "Designing intuitive products & building modern web applications.",
     aboutPageSubtitle: "BS Information Technology Graduate from the University of Mindanao.",
-    aboutPageBio: "I am a BS Information Technology Graduate from the University of Mindanao. I'm a motivated and detail-oriented aspiring professional deeply passionate about UI/UX design and front-end development, constantly striving to craft seamless and visually stunning digital experiences.\n\nMy experience spans UI/UX design, front-end development, mobile application development, and digital content creation. I recently joined Jairosoft's Digital Marketing Team, contributing to visual design and branding initiatives.",
+    aboutPageBio: "Hi, I'm Arceas John Calzada, a recent graduate with a Bachelor of Science in Information Technology and an aspiring UI/UX Designer. I enjoy designing digital experiences that are simple, intuitive, and meaningful.\n\nDuring my internship at Jairosoft, I gained hands-on experience creating wireframes, high-fidelity interfaces, interactive prototypes, and design systems while collaborating with developers and mentors. This experience strengthened both my design skills and my understanding of how great user experiences are built.\n\nBeyond my internship, I continue improving my skills through personal and academic projects, exploring new design trends, and expanding my knowledge in frontend development. I'm adaptable, eager to learn, and excited to contribute to products that make a positive impact.",
     aboutPageCurrently: "UI/UX Designer & Front-End Developer",
     aboutPageAvailable: "Open for Full-Time Roles & Freelance Projects"
   };
@@ -326,6 +326,42 @@ export default function AboutPage() {
                         );
                       })}
                     </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div style={{ height: "1px", background: "var(--glass-border)", width: "100%", margin: "5rem 0" }}></div>
+            
+            <div className="editorial-layout-row">
+              <div className="editorial-layout-left">
+                <h2>About the Build of this Portfolio</h2>
+              </div>
+              <div className="editorial-layout-right">
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "1.5rem" }}>
+                  <div style={{ padding: "1.5rem", background: "rgba(255,255,255,0.03)", borderRadius: "16px", border: "1px solid var(--glass-border)" }}>
+                    <h3 style={{ fontSize: "1.1rem", marginBottom: "0.5rem", color: "var(--color-orange)" }}>⚡ Core Architecture</h3>
+                    <p style={{ fontSize: "0.9rem", color: "var(--color-text-muted)", lineHeight: 1.6, margin: 0 }}>
+                      Built with Next.js 16 (App Router), React, and Firebase Firestore for full-stack data management.
+                    </p>
+                  </div>
+                  <div style={{ padding: "1.5rem", background: "rgba(255,255,255,0.03)", borderRadius: "16px", border: "1px solid var(--glass-border)" }}>
+                    <h3 style={{ fontSize: "1.1rem", marginBottom: "0.5rem", color: "var(--color-orange)" }}>🎨 Design System</h3>
+                    <p style={{ fontSize: "0.9rem", color: "var(--color-text-muted)", lineHeight: 1.6, margin: 0 }}>
+                      Custom Vanilla CSS with dynamic HSL dark/light modes, glassmorphism design, and Framer Motion micro-animations.
+                    </p>
+                  </div>
+                  <div style={{ padding: "1.5rem", background: "rgba(255,255,255,0.03)", borderRadius: "16px", border: "1px solid var(--glass-border)" }}>
+                    <h3 style={{ fontSize: "1.1rem", marginBottom: "0.5rem", color: "var(--color-orange)" }}>⚙️ Custom CMS</h3>
+                    <p style={{ fontSize: "0.9rem", color: "var(--color-text-muted)", lineHeight: 1.6, margin: 0 }}>
+                      Equipped with an Admin Dashboard for managing projects, designs, certificates, and hero carousel content in real-time.
+                    </p>
+                  </div>
+                  <div style={{ padding: "1.5rem", background: "rgba(255,255,255,0.03)", borderRadius: "16px", border: "1px solid var(--glass-border)" }}>
+                    <h3 style={{ fontSize: "1.1rem", marginBottom: "0.5rem", color: "var(--color-orange)" }}>🌐 Cloud Deployment</h3>
+                    <p style={{ fontSize: "0.9rem", color: "var(--color-text-muted)", lineHeight: 1.6, margin: 0 }}>
+                      Deployed via Cloudflare Pages edge hosting with optimized static export for high performance and fast global delivery.
+                    </p>
                   </div>
                 </div>
               </div>
