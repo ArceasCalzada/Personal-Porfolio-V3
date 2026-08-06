@@ -488,40 +488,53 @@ body.light-mode .hero-photo-card {
 }
 
 .btn-primary {
-    background-color: transparent;
-    color: var(--color-text-light);
-    border: 1px solid var(--glass-border);
-    background: var(--glass-bg);
-    backdrop-filter: blur(5px);
+    background: var(--color-orange);
+    color: #ffffff;
+    border: 1px solid var(--color-orange);
+    box-shadow: 0 4px 15px rgba(255, 109, 41, 0.25);
 }
 
 .btn-primary:hover {
-    background: var(--color-orange);
-    border-color: var(--color-orange);
-    color: #000;
+    background: #ff570a;
+    border-color: #ff570a;
+    color: #ffffff;
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(255, 109, 41, 0.2);
+    box-shadow: 0 10px 25px rgba(255, 109, 41, 0.4);
 }
 
 .btn-secondary {
     background-color: transparent;
     color: var(--color-text-light);
-    border: 1px solid var(--color-text-light);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .btn-secondary:hover {
-    background: var(--color-text-light);
-    color: var(--color-bg);
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.4);
     transform: translateY(-2px);
 }
 
+body.light-mode .btn-primary {
+    background: var(--color-orange);
+    color: #ffffff;
+    border-color: var(--color-orange);
+}
+
+body.light-mode .btn-primary:hover {
+    background: #ff570a;
+    color: #ffffff;
+}
+
 body.light-mode .btn-secondary {
-    border-color: var(--color-text-light);
+    border-color: rgba(0, 0, 0, 0.2);
+    color: var(--color-text-light);
 }
 
 body.light-mode .btn-secondary:hover {
-    background: var(--color-text-light);
-    color: var(--color-bg);
+    background: rgba(0, 0, 0, 0.08);
+    color: var(--color-text-light);
+    border-color: rgba(0, 0, 0, 0.4);
 }
 
 .hero-actions-minimal {
