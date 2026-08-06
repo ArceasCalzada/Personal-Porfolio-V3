@@ -1247,6 +1247,8 @@ body.light-mode .footer-social-inline a:hover {
     .stacked-carousel img.stack-1 { opacity: 1 !important; }
     .stacked-carousel img.stack-2 { opacity: 0.85 !important; }
     .stacked-carousel img.stack-3 { opacity: 0.7 !important; }
+.mobile-menu-toggle {
+    display: none;
 }
 
 @media (max-width: 768px) {
@@ -1307,23 +1309,23 @@ body.light-mode .footer-social-inline a:hover {
 
     .mobile-menu-toggle {
         display: flex !important;
-        align-items: center;
-        justify-content: center;
-        width: 28px;
-        height: 28px;
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        color: var(--color-text-light);
-        border-radius: 8px;
-        font-size: 0.9rem;
-        cursor: pointer;
-        transition: all 0.2s ease;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 32px !important;
+        height: 32px !important;
+        background: rgba(255, 255, 255, 0.15) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        color: #ffffff !important;
+        border-radius: 8px !important;
+        font-size: 1.1rem !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
     }
 
     body.light-mode .mobile-menu-toggle {
-        background: rgba(0, 0, 0, 0.05);
-        border-color: rgba(0, 0, 0, 0.1);
-        color: var(--color-text);
+        background: rgba(0, 0, 0, 0.08) !important;
+        border-color: rgba(0, 0, 0, 0.15) !important;
+        color: #111111 !important;
     }
 
     .mobile-nav-dropdown {
@@ -1331,33 +1333,33 @@ body.light-mode .footer-social-inline a:hover {
         top: calc(100% + 10px);
         left: 0;
         width: 100%;
-        background: rgba(18, 18, 22, 0.95);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(18, 18, 22, 0.96);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
         border-radius: 16px;
         padding: 0.8rem 1rem;
         display: flex;
         flex-direction: column;
-        gap: 0.8rem;
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        gap: 0.6rem;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
         z-index: 999;
         animation: mobileNavSlide 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
     body.light-mode .mobile-nav-dropdown {
-        background: rgba(255, 255, 255, 0.95);
-        border-color: rgba(0, 0, 0, 0.1);
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        background: rgba(255, 255, 255, 0.96);
+        border-color: rgba(0, 0, 0, 0.15);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
     }
 
     .mobile-nav-dropdown a {
         color: var(--color-text-light);
         text-decoration: none;
-        font-size: 0.9rem;
+        font-size: 0.95rem;
         font-weight: 500;
-        padding: 0.5rem 0.8rem;
-        border-radius: 8px;
+        padding: 0.6rem 1rem;
+        border-radius: 10px;
         transition: background 0.2s ease;
     }
 
@@ -1366,28 +1368,13 @@ body.light-mode .footer-social-inline a:hover {
     }
 
     .mobile-nav-dropdown a:hover {
-        background: rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.1);
     }
 
     body.light-mode .mobile-nav-dropdown a:hover {
         background: rgba(0, 0, 0, 0.05);
     }
-}
 
-@keyframes mobileNavSlide {
-    from {
-        opacity: 0;
-        transform: translateY(-8px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.mobile-menu-toggle {
-    display: none;
-}
     .footer-top-new {
         flex-direction: column;
         gap: 2rem;
@@ -1411,6 +1398,17 @@ body.light-mode .footer-social-inline a:hover {
         word-break: break-word;
         line-height: 0.95;
         text-align: left;
+    }
+}
+
+@keyframes mobileNavSlide {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 
