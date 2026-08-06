@@ -1247,6 +1247,8 @@ body.light-mode .footer-social-inline a:hover {
     .stacked-carousel img.stack-1 { opacity: 1 !important; }
     .stacked-carousel img.stack-2 { opacity: 0.85 !important; }
     .stacked-carousel img.stack-3 { opacity: 0.7 !important; }
+}
+
 .mobile-menu-toggle {
     display: none;
 }
