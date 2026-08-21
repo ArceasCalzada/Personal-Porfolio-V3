@@ -6,16 +6,22 @@ import { db } from "@/lib/firebase";
 import { doc, getDoc, collection, getDocs } from "firebase/firestore";
 import { motion } from "framer-motion";
 
+const DEFAULT_CAROUSEL_IMAGES = [
+  "/src/images/Img_1.JPG",
+  "/src/images/Img_2.jpeg",
+  "/src/images/Img_3.JPG"
+];
+
 export default function Hero() {
   const [heroData, setHeroData] = useState({
-    title: "",
-    subtitle: "",
-    cvLink: "",
-    linkedIn: "",
-    email: ""
+    title: "Hi, I’m Arceas John Calzada",
+    subtitle: "BS Information Technology Graduate & UI/UX Designer / Front-End Developer passionate about crafting seamless and visually stunning digital experiences.",
+    cvLink: "/assets/docs/CV_ArceasJohnCalzada.pdf",
+    linkedIn: "https://www.linkedin.com/in/arceas-calzada/",
+    email: "calzada.arceas@gmail.com"
   });
 
-  const [carouselImages, setCarouselImages] = useState([]);
+  const [carouselImages, setCarouselImages] = useState(DEFAULT_CAROUSEL_IMAGES);
 
   useEffect(() => {
     async function fetchHeroSettings() {
@@ -24,13 +30,13 @@ export default function Hero() {
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           const data = docSnap.data();
-          setHeroData({
-            title: data.heroTitle || "",
-            subtitle: data.heroSub1 || "",
-            cvLink: data.cvLink || "",
-            linkedIn: data.footerLinkedIn || "",
-            email: data.footerEmail || "",
-          });
+          setHeroData((prev) => ({
+            title: data.heroTitle || prev.title,
+            subtitle: data.heroSub1 || prev.subtitle,
+            cvLink: data.cvLink || prev.cvLink,
+            linkedIn: data.footerLinkedIn || prev.linkedIn,
+            email: data.footerEmail || prev.email,
+          }));
         }
       } catch (error) {
         console.error("Error fetching hero settings:", error);
